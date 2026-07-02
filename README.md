@@ -26,4 +26,4 @@ Certifique-se de ter o Docker e o Docker Compose instalados.
    `docker-compose up --build`
 
 ---
-*Desenvolvido como parte do Master Engineering Blueprint.*
+*Desenvolvido por Valter Moraes Engenheiro Devops.*
