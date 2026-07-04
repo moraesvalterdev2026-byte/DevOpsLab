@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Núcleo de Banco de Dados
+  db:
+    image: postgres:15-alpine
+    container_name: axes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: axes_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - axes_network
+
+  # Aplicação Node.js (AXES Bank)
+  app:
+    build:
+      context: ../
+      dockerfile: ./infra/Dockerfile
+    container_name: axes_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://${DB_USER:-admin}:${DB_PASSWORD:-password}@db:5432/axes_db
+    depends_on:
+      - db
+    networks:
+      - axes_network
+
+networks:
+  axes_network:
+    driver: bridge
+
+volumes:
+  db_data:
