@@ -1,6 +1,31 @@
 📖 Diário de Bordo - AXES Bank
 Este arquivo documenta a evolução técnica, decisões de arquitetura e o histórico de desenvolvimento do projeto AXES Bank.
 
+📅 2026-07-05 | Registro: Oficialização do Roadmap e Alinhamento Estratégico 🗺️
+🎯 Status Atual
+O progresso do projeto foi formalmente documentado no arquivo `docs/roadmap.md`, que agora serve como um guia tático alinhado à visão estratégica do `MasterEngineeringBlueprint.md`. A análise do estado atual do projeto confirmou a conclusão de marcos essenciais nas fases de Fundamentos e Conteinerização.
+
+✅ Marcos Concluídos e Validados no Roadmap:
+*   **FASE 1 - Fundamentos:**
+    *   `LAB 01: Linux Workstation`: Ambiente de desenvolvimento profissional configurado em WSL2/Ubuntu.
+    *   `LAB 03: Network Operations`: Aplicação Node.js servindo conteúdo e acessível na rede.
+    *   `LAB 04: Git Professional`: Fluxo de versionamento com Git e histórico detalhado no `Log.md`.
+*   **FASE 2 - Containers:**
+    *   `LAB 05: Docker Foundations`: Aplicação devidamente conteinerizada via `Dockerfile`.
+    *   `LAB 06: Docker Compose`: Orquestração completa do ambiente local (`app` + `db`) com `docker-compose.yml`.
+
+🧠 Desafios e Aprendizados
+A criação do roadmap nos força a ter uma visão clara não apenas do que foi feito, but do caminho que ainda precisa ser percorrido. Marcar os itens como concluídos valida o progresso e aumenta a motivação da equipe, transformando o planejamento em um artefato vivo e útil.
+
+🛣️ Para Onde Vamos (Próximos Passos)
+*   **Imediato:** Focar nos laboratórios pendentes da FASE 1 e 2 para solidificar a base.
+*   **Curto Prazo:** Iniciar o **LAB 02 (Linux Administration)**, desenvolvendo scripts para automação de tarefas como backups.
+*   **Médio Prazo:** Abordar o **LAB 07 (Continuous Integration)**, criando um pipeline no GitHub Actions para automatizar testes, lint e builds.
+
+Registro realizado por Valter Moraes.
+
+***************************************************************************************************************************
+
 📅 2026-07-05 | Registro: Depuração de Front-end e Refinamento de UI/UX 🎨
 🎯 Status Atual
 A landing page do AXES Bank está visualmente implementada com um design moderno, incluindo uma paleta de cores "vermelho", imagem de fundo e um formulário com efeito "Glassmorphism". Superamos uma série de desafios complexos relacionados ao carregamento de ativos estáticos (CSS e imagens) no ambiente Docker. O código-fonte está estável e correto, aguardando a validação final do ambiente de execução.
