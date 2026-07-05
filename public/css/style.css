@@ -1,0 +1,160 @@
+:root {
+    --primary-red: #B71C1C;    /* Vermelho corporativo para destaque */
+    --white: #ffffff;
+    --light-gray: #f4f6f8;     /* Cor de fundo suave */
+    --text-color: #212529;     /* Cor de texto principal, mais escura */
+    --border-color: #dee2e6;   /* Cor para bordas de inputs */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body, html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color); /* Cor de texto padrão */
+    background-color: var(--white); /* Fundo principal branco para um visual mais limpo */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    align-items: center;
+    background-color: var(--white); /* Cabeçalho com fundo branco */
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo { font-size: 24px; font-weight: 800; color: var(--primary-red); }
+
+.cta-header {
+    background: var(--primary-red);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cta-header:hover {
+    background-color: #a31515; /* Tom de vermelho mais escuro para o hover */
+    transform: translateY(-2px);
+}
+
+.hero {
+    /* Adiciona a imagem de fundo com uma sobreposição escura para legibilidade */
+    /* O caminho absoluto a partir da raiz (pasta public) */
+    /* Corrigindo o nome do arquivo da imagem de fundo para corresponder ao arquivo real */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/bakcgraund.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: var(--white); /* Garante que o texto seja branco para contrastar com a imagem */
+    padding: 60px 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    gap: 20px;
+    min-height: 100vh; /* Garante que o hero ocupe toda a altura visível */
+    background-repeat: no-repeat;
+}
+
+.hero h1 { font-size: 2.5rem; font-weight: 800; }
+
+.cta-primary {
+    /* Estilo 'outline' para reduzir a ênfase visual */
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cta-primary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.login-card {
+    /* Efeito Glassmorphism */
+    background: rgba(255, 255, 255, 0.15); /* Branco com 15% de opacidade */
+    backdrop-filter: blur(10px);          /* Efeito de vidro fosco */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
+    color: var(--white);                  /* Texto passa a ser branco para contrastar */
+    padding: 30px;
+    border-radius: 16px; /* Raio de borda mais moderno */
+    max-width: 400px;
+    width: 90%; /* Garante responsividade em telas menores */
+    margin-top: 20px;
+    text-align: left;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.login-card h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    /* Ajuste para manter legibilidade */
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 5px;
+    color: var(--text-color); /* Garante que o texto digitado seja escuro */
+}
+
+.btn-continuar {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-red);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-continuar:hover {
+    background-color: #a31515;
+    transform: translateY(-2px);
+}
+
+.card-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.card-footer a {
+    color: var(--white);
+    text-decoration: none;
+}
+
+.card-footer a:hover {
+    text-decoration: underline;
+}
+
+.card-footer p {
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+/* Media Query para Responsividade Mobile */
+@media (max-width: 768px) {
+    .hero {
+        /* Ajusta a posição da imagem para focar no lado esquerdo em telas pequenas */
+        background-position: left center;
+    }
+}
