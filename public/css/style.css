@@ -158,3 +158,29 @@ header {
         background-position: left center;
     }
 }
+
+/* Estilos para a Seção de Status do Sistema */
+.status-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #f39c12; /* Amarelo para 'pending' */
+}
+
+.status-indicator.online { background-color: #2ecc71; } /* Verde para 'online' */
+.status-indicator.offline { background-color: #e74c3c; } /* Vermelho para 'offline' */
