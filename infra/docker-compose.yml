@@ -10,6 +10,12 @@ services:
       POSTGRES_DB: axes_db
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      # Testa se o PostgreSQL está pronto para aceitar conexões.
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d ${POSTGRES_DB:-axes_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - axes_network
 
@@ -24,8 +30,12 @@ services:
       - "3000:3000"
     environment:
       DATABASE_URL: postgres://${DB_USER:-admin}:${DB_PASSWORD:-password}@db:5432/axes_db
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_DB: axes_db
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       # Mount the local source code, but exclude node_modules
       - ../:/app
