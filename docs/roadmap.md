@@ -11,7 +11,7 @@ Este documento detalha o roadmap de desenvolvimento da plataforma AXES Bank, ali
   - **Competências:** Linux, Terminal, SSH, Permissões, `systemd`.
   - **Entregáveis:** Ambiente Linux (WSL2) configurado e operacional.
 
-- [ ] **LAB 02: Linux Administration**
+- [x] **LAB 02: Linux Administration**
   - **Meta:** Automatizar tarefas administrativas repetitivas.
   - **Competências:** Bash, Cron, Backup, Hardening.
   - **Entregáveis:** Kit de scripts de administração, rotina de backup automatizada.

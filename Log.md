@@ -1,6 +1,11 @@
 📖 Diário de Bordo - AXES Bank
 Este arquivo documenta a evolução técnica, decisões de arquitetura e o histórico de desenvolvimento do projeto AXES Bank.
 
+📅 2026-07-05 | Registro: Decisões Arquiteturais e Refinamento do Versionamento 💎
+🎯 Status Atual
+Durante a revisão para o commit da FASE 1, foi tomada a decisão de não versionar arquivos de backup. Esta decisão e sua justificativa foram formalizadas em nosso primeiro Architectural Decision Record (ADR).
+*   **Referência:** ADR 0001: Não Versionar Arquivos de Backup no Git
+
 📅 2026-07-05 | Registro: Conclusão da FASE 1 e Automação de Backups 🏆
 🎯 Status Atual
 A **FASE 1 - Fundamentos de Engenharia** foi oficialmente concluída com a finalização do **LAB 02**. A plataforma agora conta com uma rotina de backup para o banco de dados PostgreSQL totalmente automatizada, um marco crucial para a resiliência e a operação profissional do sistema.

@@ -1,7 +1,7 @@
 # Define o alvo padrão para 'help' quando 'make' é executado sem argumentos.
 DEFAULT_GOAL := help
 
-.PHONY: help up down logs status backup
+.PHONY: help up down logs status backup release
 
 # Variável para o caminho do arquivo docker-compose, facilitando a manutenção.
 COMPOSE_FILE := infra/docker-compose.yml
@@ -13,6 +13,7 @@ help:
 	@echo "  make logs    - Exibe e acompanha os logs dos containers."
 	@echo "  make status  - Mostra o status atual dos containers."
 	@echo "  make backup  - Executa o script de backup do banco de dados."
+	@echo "  make release - Inicia o ciclo de release de trabalho (docs, post, commit, push)."
 
 up:
 	@echo "Subindo containers..."
@@ -33,3 +34,7 @@ status:
 backup:
 	@echo "Executando o script de backup do banco de dados..."
 	@bash scripts/backup_database.sh
+
+release:
+	@echo "Iniciando processo de RUpload..."
+	@bash scripts/release_work.sh
