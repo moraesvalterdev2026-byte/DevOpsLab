@@ -44,7 +44,7 @@ Este documento detalha o roadmap de desenvolvimento da plataforma AXES Bank, ali
   - **Competências:** Docker Compose.
   - **Entregáveis:** Stack completa e funcional com um único comando (`docker-compose up`).
 
-- [ ] **LAB 07: Continuous Integration**
+- [x] **LAB 07: Continuous Integration**
   - **Meta:** Automatizar a validação e o build do projeto.
   - **Competências:** GitHub Actions, Testes, Lint, Build, Container Registry.
   - **Entregáveis:** Pipeline de CI funcional no GitHub.

@@ -1,0 +1,58 @@
+# .github/workflows/ci.yml
+
+name: Continuous Integration
+
+# Triggers: Run this workflow on pushes to the main branch and on pull requests targeting the main branch.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # Job to build and test the application
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # Service containers to run with the job
+    services:
+      # Label used to access the service container
+      postgres:
+        image: postgres:15-alpine
+        # Environment variables for the postgres service
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: axes_db_test
+        # Health check to wait until postgres is ready
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+        env:
+          # Environment variables for the test script to connect to the service container
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: axes_db_test
+          POSTGRES_HOST: localhost # The service is mapped to localhost in the runner
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # Dynamically get the mapped port

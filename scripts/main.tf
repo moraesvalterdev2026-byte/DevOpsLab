@@ -1,0 +1,105 @@
+# infra/terraform/main.tf
+
+# Bloco de configuração do Terraform.
+# Especifica a versão do Terraform e os provedores necessários.
+terraform {
+  required_version = ">= 1.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+# Configura o provedor da AWS, definindo a região onde os recursos serão criados.
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Declara o nosso primeiro recurso: uma Virtual Private Cloud (VPC).
+# Esta será a rede isolada para a nossa aplicação na AWS.
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "axes-bank-vpc"
+  }
+}
+
+# Cria uma sub-rede pública dentro da nossa VPC.
+# É aqui que nossos recursos, como a instância EC2, ficarão.
+resource "aws_subnet" "main" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+
+  # Garante que instâncias lançadas nesta sub-rede recebam um IP público.
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "axes-bank-public-subnet"
+  }
+}
+
+# Cria um Internet Gateway para permitir a comunicação entre a VPC e a internet.
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "axes-bank-igw"
+  }
+}
+
+# Cria uma tabela de rotas para direcionar o tráfego da sub-rede para a internet.
+resource "aws_route_table" "main" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0" # Rota para todo o tráfego de saída.
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "axes-bank-public-rt"
+  }
+}
+
+# Associa a tabela de rotas à nossa sub-rede pública.
+resource "aws_route_table_association" "main" {
+  subnet_id      = aws_subnet.main.id
+  route_table_id = aws_route_table.main.id
+}
+
+# Cria um grupo de segurança (firewall) para a nossa instância EC2.
+resource "aws_security_group" "app_sg" {
+  name        = "axes-bank-app-sg"
+  description = "Allow SSH and App traffic"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22 # Permite acesso SSH
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # ATENÇÃO: Aberto para o mundo. Idealmente, restrinja ao seu IP.
+  }
+
+  ingress {
+    from_port   = 3000 # Permite acesso à nossa aplicação Node.js
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "axes-bank-app-sg"
+  }
+}
+}
