@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Transferência - AXES Bank</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <!-- O cabeçalho será carregado aqui pelo utils.js -->
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <section class="card">
+            <h2>Realizar Transferência</h2>
+            <p>Envie dinheiro para outra conta AXES Bank.</p>
+
+            <form id="transfer-form">
+                <div class="form-group">
+                    <label for="destinationAccount">Conta de Destino</label>
+                    <input type="text" id="destinationAccount" name="destinationAccount" placeholder="Número da conta" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Valor (R$)</label>
+                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" min="0.01" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Transferir</button>
+            </form>
+
+            <!-- Área para exibir mensagens de sucesso ou erro -->
+            <div id="message-area" class="message-box" style="display: none;"></div>
+
+            <div class="dashboard-link">
+                <a href="/dashboard.html">Voltar para o Dashboard</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/utils.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/transfer.js"></script>
+</body>
+</html>

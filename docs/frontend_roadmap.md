@@ -37,8 +37,8 @@ Este documento detalha o roadmap de desenvolvimento para a interface do usuário
 
 **Objetivo:** Permitir que o usuário realize operações financeiras.
 
-*   [ ] **Tarefa 4.1: Modal ou Página de Transferência:** Desenvolver a interface para o usuário inserir os dados de uma transferência (conta de destino, valor).
-*   [ ] **Tarefa 4.2: Lógica de Transação (JavaScript):** Implementar a lógica `fetch` para enviar a solicitação de transferência para o endpoint `/api/transactions`.
+*   [x] **Tarefa 4.1: Modal ou Página de Transferência:** Desenvolver a interface para o usuário inserir os dados de uma transferência (conta de destino, valor).
+*   [x] **Tarefa 4.2: Lógica de Transação (JavaScript):** Implementar a lógica `fetch` para enviar a solicitação de transferência para o endpoint `/api/transactions`.
 
 ---
 

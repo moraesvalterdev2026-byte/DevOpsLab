@@ -1,7 +1,7 @@
 # infra/terraform/main.tf
 
 # Bloco de configuração do Terraform.
-# Especifica a versão do Terraform e os provedores necessários.
+# Especifica a versão do Terraform e os provedores necessários (AWS e HTTP).
 terraform {
   required_version = ">= 1.0"
 
@@ -10,12 +10,21 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 3.4"
+    }
   }
 }
 
 # Configura o provedor da AWS, definindo a região onde os recursos serão criados.
 provider "aws" {
   region = "us-east-1"
+}
+
+# Data source para obter o IP público da máquina que executa o Terraform.
+data "http" "my_ip" {
+  url = "https://ipv4.icanhazip.com"
 }
 
 # Declara o nosso primeiro recurso: uma Virtual Private Cloud (VPC).
@@ -81,7 +90,8 @@ resource "aws_security_group" "app_sg" {
     from_port   = 22 # Permite acesso SSH
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # ATENÇÃO: Aberto para o mundo. Idealmente, restrinja ao seu IP.
+    # Restringe o acesso SSH dinamicamente ao IP da máquina que executa o 'terraform apply'.
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]
   }
 
   ingress {
@@ -100,31 +110,5 @@ resource "aws_security_group" "app_sg" {
 
   tags = {
     Name = "axes-bank-app-sg"
-  }
-}
-# Especifica a versão do Terraform e os provedores necessários.
-terraform {
-  required_version = ">= 1.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-# Configura o provedor da AWS, definindo a região onde os recursos serão criados.
-provider "aws" {
-  region = "us-east-1"
-}
-
-# Declara o nosso primeiro recurso: uma Virtual Private Cloud (VPC).
-# Esta será a rede isolada para a nossa aplicação na AWS.
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-
-  tags = {
-    Name = "axes-bank-vpc"
   }
 }
