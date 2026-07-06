@@ -23,9 +23,30 @@ run_governance_audit() {
 }
 
 # --- Funções de automação ---
-update_docs() { bash "${SCRIPT_DIR}/project_scanner.sh"; }
-update_log_md() { echo -e "\n📅 $(date) | Release Automático" >> "Log.md"; }
-generate_linkedin_post() { echo "AXES Bank Update" > "linkedin_post.txt"; }
+update_docs() {
+    log_message "${COLOR_YELLOW}" "Sincronizando roadmap com o estado do projeto..."
+    bash "${SCRIPT_DIR}/project_scanner.sh";
+}
+update_log_md() {
+    log_message "${COLOR_YELLOW}" "Gerando nova entrada para o Diário de Bordo..."
+    echo -e "\n📅 $(date) | Release Automático" >> "Log.md";
+}
+generate_linkedin_post() {
+    log_message "${COLOR_YELLOW}" "Gerando post para o LinkedIn..."
+    cat > "linkedin_post.txt" << 'EOM'
+### AXES Bank DevOps Portfolio Update ###
+
+Ciclo de desenvolvimento concluído com foco em robustez e governança.
+
+**Relato Técnico:**
+Nossas automações (`make scan`, `make release`) foram refatoradas para incluir validação de dependências, logs profissionais com cores e timestamps, e um portão de auditoria que valida a documentação de decisões arquiteturais (ADRs) antes de cada release.
+
+Isso transforma nossos scripts em ferramentas de engenharia de plataforma, garantindo que a qualidade e a disciplina sejam mantidas automaticamente.
+
+#DevOps #PlatformEngineering #Automation #GovernanceAsCode #BuildInPublic
+EOM
+    log_message "${COLOR_GREEN}" "✅ Post para LinkedIn gerado com sucesso."
+}
 
 perform_git_operations() {
     log_message "${COLOR_YELLOW}" "Sincronizando Git..."

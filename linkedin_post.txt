@@ -1,1 +1,10 @@
-AXES Bank Update
+### AXES Bank DevOps Portfolio Update ###
+
+Ciclo de desenvolvimento concluído com foco em robustez e governança.
+
+**Relato Técnico:**
+Nossas automações (`make scan`, `make release`) foram refatoradas para incluir validação de dependências, logs profissionais com cores e timestamps, e um portão de auditoria que valida a documentação de decisões arquiteturais (ADRs) antes de cada release.
+
+Isso transforma nossos scripts em ferramentas de engenharia de plataforma, garantindo que a qualidade e a disciplina sejam mantidas automaticamente.
+
+#DevOps #PlatformEngineering #Automation #GovernanceAsCode #BuildInPublic
