@@ -236,3 +236,46 @@ header {
         transform: rotate(360deg);
     }
 }
+
+/* Estilos para os componentes do Dashboard */
+.dashboard-card .balance-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-red);
+    margin-top: 10px;
+}
+
+.dashboard-card .balance-error {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Estilos para o componente de Extrato */
+.statement-list {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.statement-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.statement-item:last-child {
+    border-bottom: none;
+}
+
+.tx-description {
+    flex-grow: 1;
+    margin: 0 15px;
+}
+
+.tx-amount.credit {
+    color: #2ecc71; /* Verde para créditos */
+}
+
+.tx-amount.debit {
+    color: #e74c3c; /* Vermelho para débitos */
+}

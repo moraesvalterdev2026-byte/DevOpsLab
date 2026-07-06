@@ -17,9 +17,9 @@ Este documento detalha o roadmap de desenvolvimento para a interface do usuário
 **Objetivo:** Construir a interface para o usuário se autenticar na plataforma.
 
 *   [x] **Tarefa 2.1: Criação da Página de Login:** Desenvolver a página `login.html` com um formulário de usuário e senha.
-*   [ ] **Tarefa 2.2: Criação da Página de Cadastro:** Desenvolver a página `register.html` com um formulário de cadastro.
+*   [x] **Tarefa 2.2: Criação da Página de Cadastro:** Desenvolver a página `register.html` com um formulário de cadastro.
 *   [x] **Tarefa 2.3: Módulo de API (`api.js`):** Criar um módulo centralizador para as chamadas `fetch`, preparando para a injeção de tokens de autenticação.
-*   [ ] **Tarefa 2.4: Lógica de Autenticação (JavaScript):** Implementar a lógica `fetch` para enviar os dados dos formulários para os futuros endpoints de backend (`/api/auth/login`, `/api/auth/register`).
+*   [x] **Tarefa 2.4: Lógica de Autenticação (JavaScript):** Implementar a lógica `fetch` para enviar os dados dos formulários para os futuros endpoints de backend (`/api/auth/login`, `/api/auth/register`).
 
 ---
 
@@ -27,9 +27,9 @@ Este documento detalha o roadmap de desenvolvimento para a interface do usuário
 
 **Objetivo:** Criar a área principal onde o cliente interage com sua conta.
 
-*   [ ] **Tarefa 3.1: Criação da Página do Dashboard:** Desenvolver a página `dashboard.html`, que será a tela principal após o login.
-*   [ ] **Tarefa 3.2: Componente de Saldo:** Criar uma seção no dashboard que fará uma chamada `fetch` para o endpoint `/api/accounts/{id}/balance` e exibirá o saldo.
-*   [ ] **Tarefa 3.3: Componente de Extrato:** Criar uma tabela ou lista no dashboard que buscará e exibirá as últimas transações do endpoint `/api/accounts/{id}/statement`.
+*   [x] **Tarefa 3.1: Criação da Página do Dashboard:** Desenvolver a página `dashboard.html`, que será a tela principal após o login.
+*   [x] **Tarefa 3.2: Componente de Saldo:** Criar uma seção no dashboard que fará uma chamada `fetch` para o endpoint `/api/accounts/{id}/balance` e exibirá o saldo.
+*   [x] **Tarefa 3.3: Componente de Extrato:** Criar uma tabela ou lista no dashboard que buscará e exibirá as últimas transações do endpoint `/api/accounts/{id}/statement`.
 
 ---
 
