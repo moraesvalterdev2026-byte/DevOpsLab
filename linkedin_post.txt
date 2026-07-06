@@ -1,16 +1,1 @@
-### AXES Bank DevOps Portfolio Update ###
-
-Concluímos um ciclo de desenvolvimento focado em solidificar as fundações de engenharia e automação do nosso projeto.
-
-**Relato Técnico do Período:**
-
-1.  **Finalização da FASE 1 - Fundamentos de Engenharia:** Todos os laboratórios base foram concluídos.
-2.  **Melhoria da Experiência do Desenvolvedor (DX):** Makefile refatorado para maior robustez.
-3.  **Estabelecimento de Padrões de Arquitetura:** Criamos nosso primeiro ADR.
-
-**Call to Action (CTA):**
-Estou construindo este projeto de forma pública e colaborativa. Feedbacks, sugestões e contribuições são muito bem-vindos.
-
-#DevOps #SRE #PlatformEngineering #Git #Automation #Bash #Portfolio
-
-**Repositório:** https://github.com/moraesvalterdev2026-byte/DevOpsLab.git
+AXES Bank Update
