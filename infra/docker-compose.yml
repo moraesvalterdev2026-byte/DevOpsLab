@@ -30,6 +30,7 @@ services:
       - "3000:3000"
     environment:
       DATABASE_URL: postgres://${DB_USER:-admin}:${DB_PASSWORD:-password}@db:5432/axes_db
+      API_BASE_URL: http://localhost:3000 # URL base para o frontend consumir a API
       POSTGRES_USER: ${DB_USER:-admin}
       POSTGRES_DB: axes_db
       POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
