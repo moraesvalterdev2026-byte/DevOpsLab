@@ -16,9 +16,9 @@ Este documento detalha o roadmap de desenvolvimento para a interface do usuário
 
 **Objetivo:** Construir a interface para o usuário se autenticar na plataforma.
 
-*   [ ] **Tarefa 2.1: Criação da Página de Login:** Desenvolver a página `login.html` com um formulário de usuário e senha.
+*   [x] **Tarefa 2.1: Criação da Página de Login:** Desenvolver a página `login.html` com um formulário de usuário e senha.
 *   [ ] **Tarefa 2.2: Criação da Página de Cadastro:** Desenvolver a página `register.html` com um formulário de cadastro.
-*   [ ] **Tarefa 2.3: Módulo de API (`api.js`):** Criar um módulo centralizador para as chamadas `fetch`, preparando para a injeção de tokens de autenticação.
+*   [x] **Tarefa 2.3: Módulo de API (`api.js`):** Criar um módulo centralizador para as chamadas `fetch`, preparando para a injeção de tokens de autenticação.
 *   [ ] **Tarefa 2.4: Lógica de Autenticação (JavaScript):** Implementar a lógica `fetch` para enviar os dados dos formulários para os futuros endpoints de backend (`/api/auth/login`, `/api/auth/register`).
 
 ---

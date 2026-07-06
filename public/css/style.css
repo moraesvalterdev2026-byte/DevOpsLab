@@ -131,6 +131,39 @@ header {
     transform: translateY(-2px);
 }
 
+.btn-continuar.loading {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.btn-continuar .btn-text {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.btn-continuar.loading .btn-text {
+    opacity: 0; /* Esconde o texto durante o loading */
+}
+
+.btn-continuar::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0; /* Escondido por padrão */
+}
+
+.btn-continuar.loading::after {
+    opacity: 1; /* Mostra o spinner durante o loading */
+}
+
 .card-footer {
     margin-top: 20px;
     text-align: center;
@@ -184,3 +217,22 @@ header {
 
 .status-indicator.online { background-color: #2ecc71; } /* Verde para 'online' */
 .status-indicator.offline { background-color: #e74c3c; } /* Vermelho para 'offline' */
+
+/* Utility class for screen-reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
