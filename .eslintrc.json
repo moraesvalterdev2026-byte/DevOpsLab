@@ -9,6 +9,7 @@
         "ecmaVersion": 12
     },
     "globals": {
+        "api": "readonly",
         "fetchApi": "readonly",
         "loadHeader": "readonly",
         "checkAuth": "readonly",
