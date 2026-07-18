@@ -11,7 +11,7 @@ help: ## Exibe esta mensagem de ajuda com os comandos disponíveis.
 	@echo "Comandos disponíveis para o projeto AXES Bank:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: up down logs status backup release scan
+.PHONY: up down logs status backup release scan audit-ai
 
 # --- Gerenciamento do Ambiente Docker ---
 up: ## Inicia os containers da aplicação em background.
@@ -41,3 +41,7 @@ release: ## Executa o ciclo completo de release (auditoria, documentação, comm
 scan: ## Analisa o projeto, atualiza o roadmap e sugere o próximo passo.
 	@echo "Iniciando scanner de projeto..."
 	@bash scripts/project_scanner.sh
+
+audit-ai: ## Executa uma auditoria de governança em artefatos usando um agente de IA local.
+	@echo "Iniciando auditoria com Agente de IA..."
+	@bash scripts/ai_governance_audit.sh

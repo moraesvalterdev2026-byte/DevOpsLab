@@ -80,6 +80,7 @@ update_roadmap_status() {
         "LAB 02: Linux Administration;${PROJECT_ROOT}/scripts/backup_database.sh;100;\[ \] \*\*LAB 02: Linux Administration\*\*"
         "LAB 07: Continuous Integration;${PROJECT_ROOT}/.github/workflows/ci.yml;100;\[ \] \*\*LAB 07: Continuous Integration\*\*"
         "LAB 08: Infrastructure as Code;${PROJECT_ROOT}/infra/terraform/main.tf;100;\[ \] \*\*LAB 08: Infrastructure as Code\*\*"
+        "LAB 14: AI-Driven Governance;${PROJECT_ROOT}/scripts/ai_governance_audit.sh;100;\[ \] \*\*LAB 14: AI-Driven Governance\*\*"
     )
 
     # 4. Itera sobre a lista de laboratórios e atualiza o arquivo temporário

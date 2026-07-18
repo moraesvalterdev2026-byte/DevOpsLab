@@ -23,7 +23,7 @@ services:
   app:
     build:
       context: ../
-      dockerfile: ./infra/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: axes_app
     restart: unless-stopped
     ports:
@@ -45,6 +45,23 @@ services:
     networks:
       - axes_network
 
+  # Agente de IA para Governança e Observabilidade
+  ai:
+    image: ollama/ollama:latest
+    container_name: axes_ai_agent
+    restart: unless-stopped
+    entrypoint: ["bash", "/app/entrypoint.sh"]
+    # Garante que o script de entrypoint tenha permissões de root para executar
+    user: "0:0"
+    volumes:
+      - ollama_data:/root/.ollama
+      # O caminho de origem é relativo ao docker-compose.yml (./infra)
+      - ./ai/entrypoint.sh:/app/entrypoint.sh
+    ports:
+      - "11434:11434"
+    networks:
+      - axes_network
+
 networks:
   axes_network:
     driver: bridge
@@ -53,3 +70,4 @@ volumes:
   db_data:
   # Define the named volume for node_modules
   node_modules:
+  ollama_data:

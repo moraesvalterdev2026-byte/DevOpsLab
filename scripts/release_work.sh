@@ -27,6 +27,27 @@ run_governance_audit() {
     else
         log_message "${COLOR_YELLOW}" "⚠️ AVISO: Nenhuma ADR encontrada. Continuando..."
     fi
+
+    log_message "${COLOR_YELLOW}" "Executando auditoria de governança com IA..."
+    # Captura a saída do script de auditoria para análise.
+    local audit_output
+    if ! audit_output=$(bash "${SCRIPT_DIR}/ai_governance_audit.sh" 2>&1); then
+        log_message "${COLOR_RED}" "❌ ERRO: A execução da auditoria de IA falhou."
+        echo "$audit_output" # Mostra o erro do script
+        log_message "${COLOR_RED}" "Status da Auditoria: REPROVADO"
+        exit 1
+    fi
+
+    # Quality Gate: Verifica se a saída da auditoria contém palavras-chave de falha.
+    if echo "$audit_output" | grep -q -E 'CRÍTICO|RISCO ALTO|VULNERABILIDADE'; then
+        log_message "${COLOR_RED}" "❌ Quality Gate: REPROVADO! A auditoria de IA encontrou problemas críticos."
+        # Exibe o relatório para que o desenvolvedor veja o problema.
+        echo -e "\n--- Relatório da Auditoria ---\n${audit_output}\n--------------------------\n"
+        log_message "${COLOR_RED}" "O release foi interrompido. Corrija os problemas apontados e tente novamente."
+        exit 1
+    fi
+
+    log_message "${COLOR_GREEN}" "✅ Quality Gate: APROVADO! Nenhuma inconsistência crítica encontrada pela IA."
 }
 
 # --- Funções de Geração de Documentação ---
