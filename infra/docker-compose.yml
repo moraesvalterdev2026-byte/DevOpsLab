@@ -44,6 +44,11 @@ services:
       - node_modules:/app/node_modules
     networks:
       - axes_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Agente de IA para Governança e Observabilidade
   ai:
@@ -61,6 +66,12 @@ services:
       - "11434:11434"
     networks:
       - axes_network
+    healthcheck:
+      # Usa o CLI nativo do ollama para verificar a saúde, evitando a dependência do curl.
+      test: ["CMD", "ollama", "ps"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   axes_network:

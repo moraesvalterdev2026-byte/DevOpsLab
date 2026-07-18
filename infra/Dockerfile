@@ -1,6 +1,9 @@
 # Estágio de construção
 FROM node:20-alpine AS builder
 WORKDIR /app
+# Instala o curl, necessário para o healthcheck no docker-compose.
+RUN apk add --no-cache curl
+
 COPY package*.json ./
 RUN npm ci
 COPY . .
