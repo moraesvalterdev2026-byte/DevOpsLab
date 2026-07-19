@@ -18,7 +18,7 @@ help: ## Exibe esta mensagem de ajuda com os comandos disponíveis.
 	@echo "Comandos disponíveis para o projeto AXES Bank:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: up down logs status backup release scan audit-ai test lint governance docs ci cache coverage frontend
+.PHONY: up down logs status backup release scan audit-ai test lint governance docs ci cache coverage frontend frontend-html frontend-css frontend-js frontend-validate edit
 
 # --- Gerenciamento do Ambiente Docker ---
 up: ## 🐳 Inicia os containers da aplicação em background.
@@ -54,9 +54,27 @@ coverage: ## 📊 Executa testes com relatório de cobertura em HTML
 	@echo "Rodando testes com cobertura..."
 	@docker exec -it axes_app npm test -- --coverage --coverageReporters=html
 
-frontend: ## 🎨 Valida funções do frontend (fetchApi e loadComponent)
+frontend-html: ## 🌐 (Agente) Gera o HTML da página de login.
+	@node scripts/frontend_html_agent.js
+
+frontend-css: ## 🎨 (Agente) Gera o CSS para a página de login.
+	@node scripts/frontend_css_agent.js
+
+frontend-js: ## 📜 (Agente) Gera o JavaScript para a página de login.
+	@node scripts/frontend_js_agent.js
+
+frontend: frontend-html frontend-css frontend-js ## 🖼️ Executa todos os agentes de frontend para gerar o código.
+	@echo "✔ Agente Frontend concluiu geração de código."
+
+frontend-validate: ## ✅ Valida se as funções críticas do frontend estão ativas.
 	@echo "Executando validação do frontend..."
 	@bash scripts/frontend_validation.sh
+
+# --- Agente Inteligente de Edição ---
+# Uso: make edit FILE=public/app.js CMD="Adicione uma validação de campo vazio"
+edit: ## 🤖 Edita um arquivo usando o agente de IA.
+	@node scripts/smart_agent.js $(FILE) "$(CMD)"
+	@echo "Pulando lint temporariamente..." # Descomente o @make lint quando o npm install terminar
 
 governance: ## 🔍 Executa a auditoria de governança com o agente de IA.
 	@echo "Iniciando auditoria com Agente de IA..."

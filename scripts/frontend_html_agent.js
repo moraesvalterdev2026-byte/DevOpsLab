@@ -1,4 +1,6 @@
+import fs from 'fs';
 
+const htmlCode = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,3 +16,7 @@
   </form>
 </body>
 </html>
+`;
+
+fs.writeFileSync('public/login.html', htmlCode);
+console.log("✔ HTML de login gerado em public/login.html");
