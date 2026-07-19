@@ -103,3 +103,9 @@ frontend-sprint2: ## 🚧 Executa passos mínimos para Sprint 2 (lint + validaç
 	@$(MAKE) frontend-validate
 	@echo "Sprint 2 validações concluídas. Commitar e abrir PR."
 
+# Accessibility (Sprint 3)
+accessibility: ## ♿ Executa testes de acessibilidade (axe + puppeteer) e gera relatórios
+	@echo "Executando varredura de acessibilidade..."
+	node scripts/accessibility_test.js
+	@echo "Relatórios gerados em .accessibility-output/"
+
