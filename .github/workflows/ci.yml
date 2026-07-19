@@ -43,4 +43,10 @@ jobs:
         run: npm run lint
 
       - name: Run tests
+        env:
+          DB_USER: axes_user
+          DB_PASSWORD: axes_pass
+          DB_NAME: axes_db
+          DB_HOST: db
+          DB_PORT: 5432
         run: npm test
