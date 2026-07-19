@@ -36,17 +36,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
       - name: Copy test env
         run: cp .env.test .env
+
+      - name: Wait for DB
+        env:
+          PGPASSWORD: axes_pass
+        run: |
+          echo "Esperando Postgres ficar pronto..."
+          for i in {1..10}; do
+            if pg_isready -h db -U axes_user -d axes_db; then
+              echo "Banco pronto!"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Banco não ficou pronto a tempo."
+          exit 1
 
       - name: Run lint
         run: npm run lint
 
       - name: Run tests
-        env:
-          DB_USER: axes_user
-          DB_PASSWORD: axes_pass
-          DB_NAME: axes_db
-          DB_HOST: db
-          DB_PORT: 5432
         run: npm test
