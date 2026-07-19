@@ -497,7 +497,7 @@
 .tx-amount { font-weight: var(--font-weight-semibold); }
 .tx-amount { font-weight: var(--font-weight-semibold); }
 .tx-amount.negative { color: var(--danger-red-dark); }
-.tx-amount.positive { color: var(--success-green-dark); }
+.tx-amount.positive { color: #065f46; /* darker green for contrast */ }
 /* ===== BALANCE ===== */
 .balance-value { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); }
 
