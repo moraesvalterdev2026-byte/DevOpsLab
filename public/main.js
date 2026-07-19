@@ -1,6 +1,4 @@
-import fs from 'fs';
 
-const jsCode = `
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const email = document.getElementById('email').value;
@@ -12,7 +10,3 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     alert("Preencha todos os campos.");
   }
 });
-`;
-
-fs.writeFileSync('public/main.js', jsCode);
-console.log("✔ JS de login gerado em public/main.js");
