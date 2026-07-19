@@ -1,5 +1,5 @@
 # Define 'help' como o alvo padrão (executado ao digitar apenas 'make')
-.DEFAULT_GOAL := help
+.DEFAULT_GOAL := ci
 
 # Carrega variáveis do arquivo .env se ele existir, tornando-as disponíveis para o make e docker-compose.
 # Isso resolve a necessidade de exportar manualmente as credenciais (IAM_USER, IAM_TOKEN).
@@ -18,43 +18,61 @@ help: ## Exibe esta mensagem de ajuda com os comandos disponíveis.
 	@echo "Comandos disponíveis para o projeto AXES Bank:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: up down logs status backup release scan audit-ai test
+.PHONY: up down logs status backup release scan audit-ai test lint governance docs ci cache coverage frontend
 
 # --- Gerenciamento do Ambiente Docker ---
-up: ## Inicia os containers da aplicação em background.
+up: ## 🐳 Inicia os containers da aplicação em background.
 	@echo "Subindo containers..."
 	@docker compose -f $(COMPOSE_FILE) up -d
 
-down: ## Para e remove os containers da aplicação.
+down: ## 🛑 Para e remove os containers da aplicação.
 	@echo "Parando containers..."
 	@docker compose -f $(COMPOSE_FILE) down
 
-logs: ## Exibe e acompanha os logs de todos os containers.
+logs: ## 📜 Exibe e acompanha os logs de todos os containers.
 	@echo "Acompanhando logs..."
 	@docker compose -f $(COMPOSE_FILE) logs -f
 
-status: ## Mostra o status atual dos containers (rodando, parado, etc.).
+status: ## 📊 Mostra o status atual dos containers (rodando, parado, etc.).
 	@echo "Status dos containers:"
 	@docker compose -f $(COMPOSE_FILE) ps
 
-# --- Automações de Operação e Governança ---
-backup: ## Executa o script de backup do banco de dados.
-	@echo "Executando o script de backup do banco de dados..."
-	@bash scripts/backup_database.sh
+# --- Agentes de Automação (alinhados com CI) ---
+cache: ## ⚡ Instala dependências com cache para acelerar builds
+	@echo "Instalando dependências com cache..."
+	@docker exec -it axes_app npm ci --prefer-offline
 
-test: ## Executa os testes dentro do container da aplicação
+lint: ## 🧹 Executa o linter para verificar a qualidade do código.
+	@echo "Executando linter..."
+	@docker exec -it axes_app npm run lint
+
+test: ## 🧪 Executa os testes dentro do container da aplicação.
 	@echo "Rodando testes dentro do container axes_app..."
 	@docker exec -it axes_app npm test
 
-release: ## Executa o ciclo completo de release (auditoria, documentação, commit e push + testes)
-	@echo "Executando ciclo de release..."
-	@docker exec -it axes_app npm test || (echo "❌ Testes falharam, abortando release."; exit 1)
-	@PROJECT_ROOT=$(CURDIR) bash $(CURDIR)/scripts/release_work.sh
+coverage: ## 📊 Executa testes com relatório de cobertura em HTML
+	@echo "Rodando testes com cobertura..."
+	@docker exec -it axes_app npm test -- --coverage --coverageReporters=html
 
-scan: ## Analisa o projeto, atualiza o roadmap e sugere o próximo passo.
-	@echo "Iniciando scanner de projeto..."
-	@bash scripts/project_scanner.sh
+frontend: ## 🎨 Valida funções do frontend (fetchApi e loadComponent)
+	@echo "Executando validação do frontend..."
+	@bash scripts/frontend_validation.sh
 
-audit-ai: ## Executa uma auditoria de governança em artefatos usando um agente de IA local.
+governance: ## 🔍 Executa a auditoria de governança com o agente de IA.
 	@echo "Iniciando auditoria com Agente de IA..."
 	@bash scripts/ai_governance_audit.sh
+
+docs: ## 📄 (Placeholder) Atualiza a documentação do projeto.
+	@echo "Executando agente de documentação..."
+	@echo "Funcionalidade a ser implementada."
+
+release: ## 🚀 Executa o ciclo completo de release (testes, auditoria, commit e push).
+	@echo "Executando ciclo de release..."
+	@make test
+	@PROJECT_ROOT=$(CURDIR) bash $(CURDIR)/scripts/release_work.sh
+
+backup: ## 💾 Executa o script de backup do banco de dados.
+	@echo "Executando o script de backup do banco de dados..."
+	@bash scripts/backup_database.sh
+
+ci: lint test ## 🔄 Executa o pipeline local completo (lint e testes).

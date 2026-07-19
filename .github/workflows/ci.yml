@@ -7,8 +7,26 @@ on:
     branches: [ main ]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
   test:
     runs-on: ubuntu-latest
+    needs: lint
 
     services:
       db:
@@ -34,14 +52,14 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
       - name: Install dependencies
         run: npm ci
 
       - name: Copy test env
         run: cp .env.test .env
-
-      - name: Run lint
-        run: npm run lint
 
       - name: Wait for DB ready
         run: |
@@ -66,3 +84,25 @@ jobs:
           DB_HOST: db
           DB_PORT: 5432
         run: npm test
+
+  # 🔍 Agente de Governança (opcional)
+  # Este job está desativado pois requer a configuração do serviço de IA (Ollama) no workflow.
+  # governance:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #     - name: Run AI Governance Audit
+  #       run: ./scripts/ai_governance_audit.sh
+
+  # 📄 Agente de Documentação (opcional)
+  # Este job está desativado pois o script de automação de documentação ainda precisa ser implementado.
+  # documentation:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #     - name: Update Documentation
+  #       run: ./scripts/update_documentation.sh # Exemplo de script a ser criado

@@ -165,7 +165,7 @@ audit_file() {
         exit 1
     }
 
-    local content=$(&lt;"$artifact")
+    local content=$(cat "$artifact")
     local file_hash=$(sha256sum "$artifact" | awk '{print $1}')
 
     local prompt_template=$(&lt;"$PROMPT_TEMPLATE_FILE")

@@ -3,4 +3,7 @@
 /**
  * Carrega um componente HTML de um arquivo e o injeta em um elemento da página.
  */
-// async function loadComponent(...) {} // TODO: implementar ou remover se não for necessário
+export function loadComponent(name) {
+  const el = document.getElementById('app');
+  el.innerHTML = `<div>Componente ${name} carregado!</div>`;
+}

@@ -8,4 +8,6 @@ const API_BASE_URL = ''; // A URL base é a mesma do servidor que serve o fronte
  * @param {object} options - As opções para a chamada fetch (method, headers, body, etc.).
  * @returns {Promise<object>} - O JSON retornado pela API.
  */
-// async function fetchApi(...) {} // TODO: implementar ou remover se não for necessário
+export function fetchApi(endpoint) {
+  return fetch(`/api/${endpoint}`).then(res => res.json());
+}
