@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     services:
       db:
         image: postgres:16
@@ -36,8 +37,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Copy test env
+        run: cp .env.test .env
+
       - name: Run lint
         run: npm run lint
+
+      - name: Wait for DB ready
+        run: |
+          echo "Esperando Postgres aceitar conexões..."
+          for i in {1..10}; do
+            if pg_isready -h db -U axes_user -d axes_db; then
+              echo "Banco pronto!"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Banco não ficou pronto a tempo."
+          exit 1
+        env:
+          PGPASSWORD: axes_pass
 
       - name: Run tests
         env:
