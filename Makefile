@@ -94,3 +94,18 @@ backup: ## 💾 Executa o script de backup do banco de dados.
 	@bash scripts/backup_database.sh
 
 ci: lint test ## 🔄 Executa o pipeline local completo (lint e testes).
+	@echo "Pipeline local concluído."
+
+# Sprint 2 - Consolidação de Páginas
+frontend-sprint2: ## 🚧 Executa passos mínimos para Sprint 2 (lint + validação frontend)
+	@echo "Iniciando Sprint 2: refatoração da página de login"
+	@$(MAKE) lint
+	@$(MAKE) frontend-validate
+	@echo "Sprint 2 validações concluídas. Commitar e abrir PR."
+
+# Accessibility (Sprint 3)
+accessibility: ## ♿ Executa testes de acessibilidade (axe + puppeteer) e gera relatórios
+	@echo "Executando varredura de acessibilidade..."
+	node scripts/accessibility_test.js
+	@echo "Relatórios gerados em .accessibility-output/"
+

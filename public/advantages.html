@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vantagens - AXES Bank</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <meta name="description" content="Descubra as vantagens de ser cliente AXES Bank: cartões, investimentos, conta digital sem tarifas e benefícios exclusivos.">
+    <link rel="canonical" href="https://example.com/advantages.html">
+    <meta property="og:title" content="Vantagens - AXES Bank">
+    <meta property="og:description" content="Descubra as vantagens de ser cliente AXES Bank: cartões, investimentos, conta digital sem tarifas e benefícios exclusivos.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/images/advantages-og.jpg">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/advantages.css">
 </head>
 <body>
@@ -13,6 +18,7 @@
     <div id="header-placeholder"></div>
 
     <main class="container">
+        <h1 class="sr-only">Vantagens - AXES Bank</h1>
         <div class="advantages-header">
             <h2>Conheça as Vantagens de ser AXES Bank</h2>
             <p>Uma plataforma completa para sua vida financeira, sem burocracia e 100% digital.</p>
@@ -21,7 +27,7 @@
         <!-- Trillho de Produtos: Cartão de Crédito -->
         <section class="product-carousel-row">
             <h3><span class="icon">💳</span> Cartão de Crédito AXES Gold</h3>
-            <div class="product-carousel">
+            <div class="product-carousel stagger">
                 <div class="product-card">
                     <img src="https://via.placeholder.com/300x400/E50914/FFFFFF?text=Anuidade+Zero" alt="Cartão de Crédito">
                     <div class="product-card-content"><h4>Anuidade Zero</h4><p>Use seu cartão sem se preocupar com taxas anuais.</p></div>
@@ -71,7 +77,7 @@
         <!-- Trillho de Produtos: Investimentos -->
         <section class="product-carousel-row">
             <h3><span class="icon">📈</span> Plataforma de Investimentos</h3>
-            <div class="product-carousel">
+            <div class="product-carousel stagger">
                 <div class="product-card">
                     <img src="https://via.placeholder.com/300x400/34a853/FFFFFF?text=Todos+os+Perfis" alt="Investimentos">
                     <div class="product-card-content"><h4>Para Todos os Perfis</h4><p>Invista em Renda Fixa, Fundos e Ações com facilidade.</p></div>
@@ -95,8 +101,12 @@
 
     </main>
 
-    <!-- Scripts -->
-    <script src="/js/utils.js"></script>
+    <!-- Core modules -->
+    <script type="module" src="/js/core/index.js"></script>
+    <script type="module" src="/js/utils/index.js"></script>
+    <script type="module" src="/js/main.js"></script>
+
+    <!-- Page-specific scripts -->
     <script src="/js/advantages.js"></script>
 </body>
 </html>

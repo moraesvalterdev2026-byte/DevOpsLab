@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // Carrega o cabeçalho dinamicamente
-    loadHeader();
+    if (typeof loadHeader === 'function') { try { loadHeader(); } catch (err) { void err; } }
 
     // Seleciona todos os "trilhos" de produtos da página
     const carousels = document.querySelectorAll('.product-carousel-row');
@@ -11,6 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const carousel = row.querySelector('.product-carousel');
         const prevButton = row.querySelector('.carousel-btn.prev');
         const nextButton = row.querySelector('.carousel-btn.next');
+
+        // Accessibility: ensure ids and aria attributes
+        if (carousel) {
+            const id = carousel.id || `product-carousel-${Math.random().toString(36).substr(2,5)}`;
+            carousel.id = id;
+            carousel.setAttribute('role', 'region');
+            carousel.setAttribute('tabindex', '0');
+            const heading = row.querySelector('h3');
+            if (heading) carousel.setAttribute('aria-label', heading.textContent);
+        }
+        if (prevButton) {
+            prevButton.setAttribute('aria-controls', carousel?.id || '');
+            prevButton.setAttribute('aria-label', 'Anterior');
+            prevButton.setAttribute('type', 'button');
+        }
+        if (nextButton) {
+            nextButton.setAttribute('aria-controls', carousel?.id || '');
+            nextButton.setAttribute('aria-label', 'Próximo');
+            nextButton.setAttribute('type', 'button');
+        }
 
         // Função para verificar e mostrar/ocultar botões
         const updateButtons = () => {

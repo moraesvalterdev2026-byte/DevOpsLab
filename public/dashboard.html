@@ -7,14 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script src="/js/utils.js" defer></script>
     <script src="/js/main.js" defer></script>
     <script src="/js/api.js" defer></script>
-    <script src="/js/dashboard.js" defer></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
+    <aside id="sidebar" aria-label="Barra lateral de navegação" class="sidebar-container"></aside>
     <main class="dashboard-main">
         <div class="dashboard-header">
             <h1>Bem-vindo, <span id="user-name">Cliente</span>!</h1>
@@ -33,5 +33,10 @@
             </div>
         </div>
     </main>
+
+    <script type="module" src="/js/core/index.js"></script>
+    <script type="module" src="/js/utils/index.js"></script>
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/dashboard.js"></script>
 </body>
 </html>
