@@ -7,8 +7,8 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "test": "jest --passWithNoTests",
+    "format": "prettier --write .",    
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
     "test:watch": "jest --watchAll --runInBand"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "pg": "^8.11.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.5.0",
     "nodemon": "^3.0.0",
     "eslint": "^9.0.0",
     "prettier": "^3.0.0",
@@ -24,5 +25,6 @@
     "supertest": "^7.0.0"
   },
   "author": "Valter Carlos Lima Moraes",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "module"
 }

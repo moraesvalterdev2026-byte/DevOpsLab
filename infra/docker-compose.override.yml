@@ -1,0 +1,4 @@
+# docker-compose.override.yml
+# Override desativado para evitar credenciais divergentes.
+# O ambiente de teste agora usa as mesmas credenciais do ambiente principal.
+services: {}

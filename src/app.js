@@ -1,5 +1,9 @@
 // src/app.js
-const express = require('express');
+import express from 'express';
+import dotenv from 'dotenv';
+
+// Carrega as variáveis de ambiente do arquivo .env na raiz do projeto.
+dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -14,4 +18,4 @@ app.get('/api/status', (req, res) => {
 // app.use('/api/auth', authRoutes);
 // app.use('/api/transactions', transactionRoutes);
 
-module.exports = app;
+export default app;

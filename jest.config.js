@@ -1,8 +1,8 @@
 // jest.config.js
-module.exports = {
+export default {
   testEnvironment: "node",
-  // Arquivo que será executado antes de todos os testes
-  setupFiles: ['<rootDir>/setup.js'],
+  // Arquivo que será executado antes de todos os testes para carregar variáveis de ambiente
+  setupFiles: ["<rootDir>/jest.setup.js"],
   // Garante que o Jest busque testes apenas na pasta src
-  roots: ['<rootDir>/src'],
+  roots: ["<rootDir>/src"],
 };

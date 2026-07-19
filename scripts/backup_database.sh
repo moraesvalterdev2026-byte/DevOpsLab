@@ -21,7 +21,10 @@ DB_CONTAINER="axes_db"
 DB_NAME="axes_db"
 
 # Usuário do banco de dados (deve ter permissões de leitura).
-DB_USER="admin"
+DB_USER="${DB_USER:-axes_user}"
+
+# Senha do banco de dados. Carrega da variável de ambiente ou usa um padrão.
+DB_PASSWORD="${DB_PASSWORD:-axes_pass}"
 
 # Diretório onde os backups serão armazenados.
 BACKUP_DIR="/home/moraes/EngDevOps/DevOpsLab/backups/postgres"
@@ -55,7 +58,10 @@ mkdir -p "$(dirname "${LOG_FILE}")"
 # 2. Executa o pg_dump dentro do container, comprime com gzip e salva no arquivo.
 log_message "Criando dump do banco e comprimindo para: ${BACKUP_FILE}"
 
-if docker exec -t "${DB_CONTAINER}" pg_dump -U "${DB_USER}" -d "${DB_NAME}" | gzip > "${BACKUP_FILE}"; then
+# A variável PGPASSWORD é usada pelo pg_dump para autenticação.
+# O uso de 'docker exec' com a variável de ambiente garante que a senha não seja exposta
+# na lista de processos do sistema (command line).
+if docker exec -t -e PGPASSWORD="${DB_PASSWORD}" "${DB_CONTAINER}" pg_dump -U "${DB_USER}" -d "${DB_NAME}" --no-password | gzip > "${BACKUP_FILE}"; then
     log_message "Backup do banco de dados criado com sucesso."
 else
     # A verificação de falha é explícita para logging, embora 'set -e' já interrompa o script.

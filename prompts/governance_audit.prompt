@@ -18,6 +18,11 @@ O formato obrigatório do JSON é:
 }
 
 IMPORTANTE:
+- NÃO utilize markdown.
+- NÃO envolva a resposta em blocos de código como ```json ou ```.
+- NÃO adicione comentários ou explicações.
+- A resposta deve começar com o caractere `{` e terminar com `}`.
+
 Analise o seguinte arquivo e retorne sua avaliação no formato JSON especificado.
 Se nenhum problema for encontrado, o array "issues" deve ser vazio, o status "PASS", o risco "NONE" e o score 100.
 Baseie o score na quantidade e severidade dos problemas encontrados.

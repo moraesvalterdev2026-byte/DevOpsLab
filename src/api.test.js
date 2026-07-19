@@ -1,18 +1,8 @@
 // src/api.test.js
 
-const request = require('supertest');
-const { Pool } = require('pg');
-const app = require('./app'); // Importa a definição do app, não o servidor em execução.
-
-// Configuração do pool de conexão para o banco de dados de teste
-// As variáveis de ambiente são injetadas pelo workflow do GitHub Actions
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
+import request from 'supertest';
+import app from './app.js'; // Importa a definição do app, não o servidor em execução.
+import pool from './db.js'; // Importa o pool de conexão centralizado.
 
 describe('API Integration Tests', () => {
 

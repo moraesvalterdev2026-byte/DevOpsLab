@@ -18,7 +18,7 @@ help: ## Exibe esta mensagem de ajuda com os comandos disponíveis.
 	@echo "Comandos disponíveis para o projeto AXES Bank:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: up down logs status backup release scan audit-ai
+.PHONY: up down logs status backup release scan audit-ai test
 
 # --- Gerenciamento do Ambiente Docker ---
 up: ## Inicia os containers da aplicação em background.
@@ -42,7 +42,13 @@ backup: ## Executa o script de backup do banco de dados.
 	@echo "Executando o script de backup do banco de dados..."
 	@bash scripts/backup_database.sh
 
-release: ## Executa o ciclo completo de release (auditoria, documentação, commit e push).
+test: ## Executa os testes dentro do container da aplicação
+	@echo "Rodando testes dentro do container axes_app..."
+	@docker exec -it axes_app npm test
+
+release: ## Executa o ciclo completo de release (auditoria, documentação, commit e push + testes)
+	@echo "Executando ciclo de release..."
+	@docker exec -it axes_app npm test || (echo "❌ Testes falharam, abortando release."; exit 1)
 	@PROJECT_ROOT=$(CURDIR) bash $(CURDIR)/scripts/release_work.sh
 
 scan: ## Analisa o projeto, atualiza o roadmap e sugere o próximo passo.

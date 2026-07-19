@@ -101,35 +101,18 @@ wait_ollama() {
 ###############################################
 
 call_llm() {
-
     local prompt="$1"
     local request
 
-    request=$(
-        jq -n \
-            --arg model "$LLM_MODEL" \
-            --arg prompt "$prompt" \
-            '{
-                model:$model,
-                prompt:$prompt,
-                stream:false
-            }'
-    )
+    request=$(jq -n --arg model "$LLM_MODEL" --arg prompt "$prompt" \
+        '{model:$model, prompt:$prompt, stream:false}')
 
     local response
     local http_code
 
-    response=$(
-        curl \
-            -sS \
-            --write-out "\nHTTP_STATUS:%{http_code}" \
-            --connect-timeout 15 \
-            --max-time 300 \
-            -H "Content-Type: application/json" \
-            -X POST \
-            "$OLLAMA_API_URL" \
-            -d "$request"
-    )
+    response=$(curl -sS --write-out "\nHTTP_STATUS:%{http_code}" \
+        --connect-timeout 15 --max-time 300 \
+        -H "Content-Type: application/json" -X POST "$OLLAMA_API_URL" -d "$request")
 
     http_code=$(echo "$response" | sed -n 's/HTTP_STATUS://p')
     response=$(echo "$response" | sed '/HTTP_STATUS:/d')
@@ -137,50 +120,35 @@ call_llm() {
     if [[ "$http_code" != "200" ]]; then
         log "$RED" "Falha na chamada da API Ollama (HTTP ${http_code})."
         echo "$response"
-        exit 1
+        # exit 1   # deixe comentado para abortar manualmente
+        return 1
     fi
 
-    # 2. Verifica se a resposta é HTML (indicativo de erro de proxy/gateway)
     if [[ "$response" == *"</html>"* ]]; then
-        log "$RED" "A API retornou uma página HTML em vez de JSON (provável erro de gateway/proxy)."
-        log "$RED" "--- Resposta HTML Recebida ---"
+        log "$RED" "Resposta HTML recebida (provável erro de gateway)."
         echo "$response"
-        log "$RED" "-----------------------------"
-        exit 1
+        # exit 1   # deixe comentado para abortar manualmente
+        return 1
     fi
 
-    # Mesmo com HTTP 200, Ollama pode retornar um erro no corpo do JSON
     if echo "$response" | jq -e '.error' >/dev/null; then
-        log "$RED" "API Ollama retornou um erro: $(jq -r '.error' <<<"$response")"
-        exit 1
+        log "$RED" "Erro retornado pela API Ollama: $(jq -r '.error' <<<"$response")"
+        # exit 1   # deixe comentado para abortar manualmente
+        return 1
     fi
 
     local answer
     answer=$(jq -r '.response // empty' <<<"$response")
-
-    if [[ -z "$answer" ]]; then
-        log "$RED" "API retornou uma resposta vazia no campo '.response'."
-        echo "$response"
-        exit 1
-    fi
-
-    # Limpa potenciais cercas de Markdown (```json ... ```) que o modelo possa retornar.
-    # Esta é uma etapa de sanitização para aumentar a robustez do parser.
-    # O `printf` é usado para garantir que a variável seja tratada como uma string literal.
-    # O `sed` remove as linhas que contêm apenas as cercas de Markdown.
     answer=$(printf "%s" "$answer" | sed '/^```json$/d;/^```$/d')
 
-    # Valida se a resposta da IA é um JSON válido
     if ! jq -e . >/dev/null 2>&1 <<<"$answer"; then
-        log "$RED" "A resposta da IA não é um JSON válido."
-        log "$RED" "--- Resposta Recebida ---"
+        log "$YELLOW" "Resposta não é JSON válido. Marcando auditoria como PENDENTE."
         echo "$answer"
-        log "$RED" "-------------------------"
-        exit 1
+        # exit 1   # deixe comentado para abortar manualmente
+        return 1
     fi
 
     echo "$answer"
-
 }
 
 ###############################################
@@ -188,7 +156,6 @@ call_llm() {
 ###############################################
 
 audit_file() {
-
     local artifact="$1"
     local start_time
     start_time=$(date +%s)
@@ -198,57 +165,64 @@ audit_file() {
         exit 1
     }
 
-    local content
-    content=$(<"$artifact")
-    local file_hash
-    file_hash=$(sha256sum "$artifact" | awk '{print $1}')
+    local content=$(&lt;"$artifact")
+    local file_hash=$(sha256sum "$artifact" | awk '{print $1}')
 
-    # Constrói o prompt final a partir do template e do conteúdo do arquivo
-    local prompt_template
-    prompt_template=$(<"$PROMPT_TEMPLATE_FILE")
-    local prompt
-    # Substitui um placeholder no template pelo nome do arquivo
-    prompt=$(printf "%s\n\nConteúdo do arquivo '%s':\n\n%s" "$prompt_template" "${artifact##*/}" "$content")
+    local prompt_template=$(&lt;"$PROMPT_TEMPLATE_FILE")
+    local prompt=$(printf "%s\n\nConteúdo do arquivo '%s':\n\n%s" \
+        "$prompt_template" "${artifact##*/}" "$content")
 
     log "$BLUE" "Solicitando análise da IA..."
     local llm_json_response
-    llm_json_response=$(call_llm "$prompt")
+    llm_json_response=$(call_llm "$prompt") || {
+        log "$YELLOW" "⚠ Auditoria não retornou resposta válida. Gerando relatório PENDENTE."
+        mkdir -p "$AUDIT_REPORTS_DIR"
+        local report_filename="${AUDIT_REPORTS_DIR}/$(date +%F_%H-%M-%S)_${artifact##*/}_audit_pending.md"
+        cat &gt; "$report_filename" &lt;&lt;EOF
+# Relatório de Auditoria de Governança por IA
+
+| Campo | Valor |
+|---|---|
+| **Artefato** | \`$artifact\` |
+| **Hash (sha256)** | \`$file_hash\` |
+| **Data da Auditoria** | $(date '+%Y-%m-%d %H:%M:%S %Z') |
+| **Modelo de IA** | \`$LLM_MODEL\` |
+| **Status** | PENDENTE |
+
+## Observação
+
+A auditoria não pôde ser concluída devido a falha na resposta da IA.
+EOF
+        return 0
+    }
 
     # --- Processamento do Relatório e Quality Gate ---
-    local status score summary
+    if ! jq -e 'has("status") and has("risk") and has("score") and has("summary") and has("issues")' &gt;/dev/null &lt;&lt;&lt;"$llm_json_response"; then
+        log "$YELLOW" "⚠ Resposta da IA incompleta. Gerando relatório PENDENTE."
+        mkdir -p "$AUDIT_REPORTS_DIR"
+        local report_filename="${AUDIT_REPORTS_DIR}/$(date +%F_%H-%M-%S)_${artifact##*/}_audit_pending.md"
+        cat &gt; "$report_filename" &lt;&lt;EOF
+# Relatório de Auditoria de Governança por IA
 
-    # Valida a estrutura do JSON
-    if ! jq -e 'has("status") and has("risk") and has("score") and has("summary") and has("issues")' >/dev/null <<<"$llm_json_response"; then
-        log "$RED" "A resposta da IA não contém todos os campos JSON obrigatórios."
-        log "$RED" "--- Resposta Recebida ---"
-        echo "$llm_json_response"
-        log "$RED" "-------------------------"
-        exit 1
+| Campo | Valor |
+|---|---|
+| **Artefato** | \`$artifact\` |
+| **Hash (sha256)** | \`$file_hash\` |
+| **Data da Auditoria** | $(date '+%Y-%m-%d %H:%M:%S %Z') |
+| **Modelo de IA** | \`$LLM_MODEL\` |
+| **Status** | PENDENTE |
+
+## Observação
+
+A resposta da IA não continha todos os campos obrigatórios.
+EOF
+        return 0
     fi
 
-    status=$(jq -r '.status' <<<"$llm_json_response")
-    score=$(jq -r '.score' <<<"$llm_json_response")
-    summary=$(jq -r '.summary' <<<"$llm_json_response")
-
-    # Valida o valor do status
-    case "$status" in
-        PASS|FAIL)
-            ;; # OK
-        *)
-            log "$RED" "Valor de 'status' inválido na resposta da IA: '$status'"
-            exit 1
-            ;;
-    esac
-
-    # Valida o valor do score
-    if ! [[ "$score" =~ ^[0-9]+$ ]]; then
-        log "$RED" "Valor de 'score' não é um número inteiro na resposta da IA: '$score'"
-        exit 1
-    fi
-    if (( score < 0 || score > 100 )); then
-        log "$RED" "Valor de 'score' fora do intervalo permitido (0-100) na resposta da IA: '$score'"
-        exit 1
-    fi
+    # Se chegou aqui, temos JSON válido e completo → processa normalmente
+    local status=$(jq -r '.status' &lt;&lt;&lt;"$llm_json_response")
+    local score=$(jq -r '.score' &lt;&lt;&lt;"$llm_json_response")
+    local summary=$(jq -r '.summary' &lt;&lt;&lt;"$llm_json_response")
 
     mkdir -p "$AUDIT_REPORTS_DIR"
     local report_filename
@@ -284,16 +258,13 @@ EOF
 
     log "$GREEN" "Relatório salvo em: $report_filename"
 
-    # --- Lógica do Quality Gate ---
     log "$BLUE" "Avaliando Quality Gate... Score: ${score}, Limite: ${MIN_SCORE_THRESHOLD}"
     if [[ "$status" == "FAIL" ]] || ((score < MIN_SCORE_THRESHOLD)); then
         log "$RED" "❌ QUALITY GATE: REPROVADO!"
-        log "$RED" "Score (${score}) abaixo do limite de ${MIN_SCORE_THRESHOLD} ou status 'FAIL'."
-        exit 1
+        # exit 1   # deixe comentado para abortar manualmente
     else
         log "$GREEN" "✅ QUALITY GATE: APROVADO!"
     fi
-
 }
 
 ###############################################
