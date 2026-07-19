@@ -29,10 +29,5 @@ describe('API Integration Tests', () => {
   });
 
   // Teste 3: Placeholder para Teste de Autenticação
-  test.skip('POST /api/auth/login should authenticate a user', () => {
-    // TODO: Implementar teste de login.
-    // 1. Inserir um usuário de teste no banco.
-    // 2. Fazer uma requisição POST para /api/auth/login com as credenciais.
-    // 3. Verificar se a resposta contém um token JWT e status 200.
-  });
+  test.todo('POST /api/auth/login should authenticate a user');
 });
