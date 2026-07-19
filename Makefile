@@ -109,3 +109,15 @@ accessibility: ## ♿ Executa testes de acessibilidade (axe + puppeteer) e gera 
 	node scripts/accessibility_test.js
 	@echo "Relatórios gerados em .accessibility-output/"
 
+# Frontend performance (Sprint 4)
+frontend-build: ## 🏗️ Bundle e minify frontend assets (esbuild)
+	@echo "Building frontend assets..."
+	npm run build:frontend
+	@echo "Frontend build output: public/dist/"
+
+frontend-audit: frontend-build ## 🔍 Executa auditoria de performance básica (visual + accessibility)
+	@echo "Executando auditoria frontend (visual + a11y)..."
+	node scripts/visual_test.js
+	node scripts/accessibility_test.js
+	@echo "Auditoria concluída."
+
