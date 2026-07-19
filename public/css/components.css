@@ -495,9 +495,9 @@
 .tx-meta { text-align: right; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
 .tx-date { display: block; }
 .tx-amount { font-weight: var(--font-weight-semibold); }
-.tx-amount.negative { color: var(--color-feedback-error); }
-.tx-amount.positive { color: var(--color-feedback-success); }
-
+.tx-amount { font-weight: var(--font-weight-semibold); }
+.tx-amount.negative { color: var(--danger-red-dark); }
+.tx-amount.positive { color: var(--success-green-dark); }
 /* ===== BALANCE ===== */
 .balance-value { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); }
 
