@@ -35,9 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const user = window.AxesBank?.Storage?.get(window.AxesBank?.config?.auth?.userKey) || window.AxesBank?.Storage?.get('user');
     if (user && user.identifier) userNameEl.textContent = user.identifier;
-  } catch (e) {
-    // ignore
-  }
+  } catch (err) { void err; }
 
   // Logout
   const btnLogout = document.querySelector('#btn-logout');

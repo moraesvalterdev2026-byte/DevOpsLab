@@ -468,6 +468,12 @@
   box-shadow: var(--shadow-sm);
 }
 
+.mobile-sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ===== TRANSACTIONS LIST ===== */
 .transactions-list {
   list-style: none;
@@ -498,5 +504,23 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .sidebar { display: none; }
+  .sidebar.open {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80%;
+    max-width: 320px;
+    z-index: 1100;
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-lg);
+    overflow-y: auto;
+    background-color: var(--color-background-secondary);
+  }
+  .mobile-sidebar-toggle { display: inline-flex; }
   .transactions-list { gap: var(--spacing-2); }
+  .transaction-details summary { cursor: pointer; list-style: none; }
+  .transaction-details[open] .tx-detail { display: block; }
+  .tx-detail { display: none; padding: var(--spacing-2) 0 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 }
