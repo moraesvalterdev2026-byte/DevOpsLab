@@ -5,4 +5,6 @@ export default {
   setupFiles: ["<rootDir>/jest.setup.js"],
   // Garante que o Jest busque testes apenas na pasta src
   roots: ["<rootDir>/src"],
+  // Força o Jest a encerrar após os testes, evitando problemas com handles abertos.
+  forceExit: true
 };
