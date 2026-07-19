@@ -1,0 +1,24 @@
+/**
+ * AXES Bank - Main Stylesheet
+ * Entry point that imports all CSS modules
+ * Order matters for cascade
+ */
+
+/* 1. Design System & Variables */
+@import './variables.css';
+
+/* 2. Global Reset & Base Styles */
+@import './base.css';
+
+/* 3. Component Styles */
+@import './components.css';
+
+/* 4. Layout & Grid Utilities */
+@import './layout.css';
+
+/* 5. Animations & Transitions */
+@import './animations.css';
+
+/* 6. Page-specific styles (consolidated) */
+@import './advantages.css';
+@import './style.css';

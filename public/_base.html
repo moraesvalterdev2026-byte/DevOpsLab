@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- ===== Meta Tags ===== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#B71C1C">
+    <meta name="description" content="AXES Bank - Seu banco digital seguro e rápido">
+    <meta name="keywords" content="banco, digital, seguro, transferência, conta">
+    <meta name="author" content="AXES Bank">
+
+    <!-- ===== Open Graph Tags ===== -->
+    <meta property="og:title" content="AXES Bank">
+    <meta property="og:description" content="Seu banco digital seguro e rápido">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/images/og-image.jpg">
+
+    <!-- ===== Title ===== -->
+    <title>{{PAGE_TITLE}} - AXES Bank</title>
+
+    <!-- ===== Preconnect ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ===== Fonts ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ===== Stylesheets ===== -->
+    <link rel="stylesheet" href="/css/main.css">
+    {{CUSTOM_STYLES}}
+
+    <!-- ===== Favicon ===== -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+    <!-- ===== Preload Critical Resources ===== -->
+    <link rel="preload" as="script" href="/js/utils/index.js">
+    <link rel="preload" as="script" href="/js/core/index.js">
+
+    <!-- ===== Skip to Main Link (Accessibility) ===== -->
+    <a href="#main-content" class="skip-to-main">Pular para conteúdo principal</a>
+</head>
+<body>
+    <!-- ===== No Script Warning ===== -->
+    <noscript>
+        <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; margin: 10px; border-radius: 4px;">
+            <strong>⚠️ JavaScript desativado</strong>
+            <p>Este aplicativo requer JavaScript para funcionar corretamente. Por favor, ative JavaScript no seu navegador.</p>
+        </div>
+    </noscript>
+
+    <!-- ===== Header Component ===== -->
+    <header id="header-container" role="banner">
+        <div class="container flex flex-between">
+            <div class="logo" aria-label="AXES Bank - Voltar para Home">
+                <a href="/" class="text-2xl font-extrabold text-red">🏦 AXES</a>
+            </div>
+            <nav id="main-nav" role="navigation" aria-label="Navegação principal">
+                <!-- Nav items will be injected here -->
+            </nav>
+            <div class="flex gap-4">
+                <button id="theme-toggle" class="btn btn-ghost" aria-label="Alternar tema">
+                    <span class="text-lg">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Main Content ===== -->
+    <main id="main-content" role="main">
+        {{MAIN_CONTENT}}
+    </main>
+
+    <!-- ===== Footer Component ===== -->
+    <footer id="footer-container" role="contentinfo">
+        <div class="container py-8 text-center border-t">
+            <p class="text-sm text-secondary">
+                &copy; 2026 AXES Bank. Todos os direitos reservados.
+            </p>
+            <nav class="flex flex-center gap-6 mt-4 justify-center" aria-label="Links do rodapé">
+                <a href="/privacy" class="text-sm text-primary hover:text-red">Privacidade</a>
+                <a href="/terms" class="text-sm text-primary hover:text-red">Termos</a>
+                <a href="/contact" class="text-sm text-primary hover:text-red">Contato</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- ===== Toast Container ===== -->
+    <div id="toast-container" aria-live="polite" aria-atomic="true" role="region"></div>
+
+    <!-- ===== Modal Container ===== -->
+    <div id="modal-container" role="region" aria-label="Modais"></div>
+
+    <!-- ===== Scripts ===== -->
+    <!-- Core modules -->
+    <script type="module" src="/js/core/index.js"></script>
+    <script type="module" src="/js/utils/index.js"></script>
+
+    <!-- Main app entry point -->
+    <script type="module" src="/js/main.js"></script>
+
+    <!-- Page-specific scripts -->
+    {{CUSTOM_SCRIPTS}}
+
+    <!-- ===== Analytics (if enabled) ===== -->
+    {{ANALYTICS}}
+</body>
+</html>

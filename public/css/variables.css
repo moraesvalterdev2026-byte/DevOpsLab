@@ -1,0 +1,223 @@
+/**
+ * AXES Bank Design System - Variables & Tokens
+ * Mobile-first, accessible color palette and typography system
+ */
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+  --primary-red: #B71C1C;
+  --primary-red-dark: #a31515;
+  --primary-red-light: #dc2626;
+  
+  --secondary-blue: #1e40af;
+  --secondary-blue-dark: #1e3a8a;
+  --secondary-blue-light: #3b82f6;
+
+  --neutral-white: #ffffff;
+  --neutral-50: #f9fafb;
+  --neutral-100: #f4f6f8;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+
+  --success-green: #10b981;
+  --success-green-dark: #059669;
+  --success-green-light: #34d399;
+
+  --warning-yellow: #f59e0b;
+  --warning-yellow-dark: #d97706;
+  --warning-yellow-light: #fbbf24;
+
+  --danger-red: #ef4444;
+  --danger-red-dark: #dc2626;
+  --danger-red-light: #f87171;
+
+  /* ===== SEMANTIC COLORS ===== */
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-tertiary: var(--neutral-500);
+  --color-text-inverse: var(--neutral-white);
+
+  --color-background-primary: var(--neutral-white);
+  --color-background-secondary: var(--neutral-50);
+  --color-background-tertiary: var(--neutral-100);
+
+  --color-border-light: var(--neutral-200);
+  --color-border-base: var(--neutral-300);
+  --color-border-dark: var(--neutral-400);
+
+  --color-interactive-primary: var(--primary-red);
+  --color-interactive-primary-hover: var(--primary-red-dark);
+  --color-interactive-secondary: var(--secondary-blue);
+  --color-interactive-secondary-hover: var(--secondary-blue-dark);
+
+  --color-feedback-success: var(--success-green);
+  --color-feedback-warning: var(--warning-yellow);
+  --color-feedback-error: var(--danger-red);
+  --color-feedback-info: var(--secondary-blue);
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-family-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+  /* Font Sizes (px) - Mobile First */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+  --font-size-5xl: 3rem;     /* 48px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+
+  /* ===== SPACING ===== */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  --spacing-20: 5rem;     /* 80px */
+  --spacing-24: 6rem;     /* 96px */
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-base: 0.375rem; /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS ===== */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms ease;
+
+  --transition-property-colors: background-color, border-color, color, fill, stroke;
+  --transition-property-transform: transform;
+  --transition-property-all: all;
+
+  /* ===== Z-INDEX SCALE ===== */
+  --z-hide: -1;
+  --z-auto: 0;
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+
+  /* ===== BREAKPOINTS ===== */
+  /* Mobile-first approach - min-width queries */
+  --breakpoint-xs: 0;       /* Extra small */
+  --breakpoint-sm: 640px;   /* Small */
+  --breakpoint-md: 768px;   /* Medium */
+  --breakpoint-lg: 1024px;  /* Large */
+  --breakpoint-xl: 1280px;  /* Extra large */
+  --breakpoint-2xl: 1536px; /* 2x Extra large */
+
+  /* ===== CONTAINER ===== */
+  --container-max-width: 1200px;
+  --container-padding-mobile: var(--spacing-4);
+  --container-padding-tablet: var(--spacing-6);
+  --container-padding-desktop: var(--spacing-8);
+
+  /* ===== FORMS ===== */
+  --form-input-height: 2.5rem;     /* 40px */
+  --form-input-height-sm: 2rem;    /* 32px */
+  --form-input-height-lg: 3rem;    /* 48px */
+  --form-input-padding-x: var(--spacing-3);
+  --form-input-padding-y: var(--spacing-2);
+  --form-input-border-width: 1px;
+  --form-input-border-color: var(--color-border-base);
+  --form-input-focus-ring: 0 0 0 3px rgba(183, 28, 28, 0.1);
+
+  /* ===== BUTTONS ===== */
+  --button-height: var(--form-input-height);
+  --button-height-sm: var(--form-input-height-sm);
+  --button-height-lg: var(--form-input-height-lg);
+  --button-padding-x: var(--spacing-4);
+  --button-padding-y: var(--spacing-2);
+  --button-border-radius: var(--radius-lg);
+  --button-transition: background-color var(--transition-base), 
+                       border-color var(--transition-base),
+                       transform var(--transition-base),
+                       box-shadow var(--transition-base);
+
+  /* ===== ACCESSIBILITY ===== */
+  --focus-ring-width: 2px;
+  --focus-ring-color: var(--primary-red);
+  --focus-ring-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  :root {
+    --color-text-secondary: var(--neutral-700);
+    --color-border-base: var(--neutral-500);
+  }
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: var(--neutral-50);
+    --color-text-secondary: var(--neutral-300);
+    --color-background-primary: var(--neutral-900);
+    --color-background-secondary: var(--neutral-800);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-slower: 0ms;
+  }
+}
