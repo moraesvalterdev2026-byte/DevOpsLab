@@ -36,9 +36,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Copy test env
-        run: cp .env.test .env
-
       - name: Run lint
         run: npm run lint
 
