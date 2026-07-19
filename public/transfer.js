@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Chama a função da API para criar a transação
-            const result = await api.createTransaction({ destinationAccount, amount });
+            await api.createTransaction({ destinationAccount, amount });
 
             showMessage('Transferência realizada com sucesso!', 'success');
             transferForm.reset(); // Limpa o formulário

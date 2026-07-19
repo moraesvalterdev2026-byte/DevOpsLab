@@ -1,6 +1,13 @@
 # Define 'help' como o alvo padrão (executado ao digitar apenas 'make')
 .DEFAULT_GOAL := help
 
+# Carrega variáveis do arquivo .env se ele existir, tornando-as disponíveis para o make e docker-compose.
+# Isso resolve a necessidade de exportar manualmente as credenciais (IAM_USER, IAM_TOKEN).
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 # Variável para o caminho do arquivo docker-compose, facilitando a manutenção.
 COMPOSE_FILE := infra/docker-compose.yml
 

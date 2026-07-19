@@ -3,35 +3,16 @@
 
 ---
 
-**Análise do Docker Compose.yml**
+**Riscos Identificados na Arquivo Docker-Compose.yml:**
 
-**Segurança e Privilégios:**
+- **Risco de Permissão:** A linha `user: \"0:0\"` grants permissões de raiz para o comando `bash`. Isso pode ser um risco, pois um attacker pode usar `crontab` ou outros métodos para executar comandos como `docker-compose exec` ou `docker-compose ps`.
 
-* **Risco:** Exposição de portas sensíveis, como **3000** e **11434**.
-* **Sugestão de correção:** Instalar um protetor de porta, como `docker-compose-security` ou `nginx-proxy`, para redirecionar trafic para o port seguro.
+- **Risco de Suscepção à Injeção:** O código Docker está localizado dentro do container `ai`. Se um ataqueers for capaz de adivinhar o conteúdo do container, ele pode incluir código malicioso que seja executado quando o container for iniciado.
 
-**Confiabilidade e Resiliência:**
+**Sugestões de Correção:**
 
-* **Risco:** Falta de configurações de **restart** para serviços.
-* **Sugestão de correção:** Definir um padrão de **restart** para todos os serviços.
-* **Risco:** Sincronização entre serviços pode ser um problema, como no caso do **app** e **ai**.
-* **Sugestão de correção:** Implementar um sistema de comunicação entre serviços para gerenciar a sincronização.
-
-**Governança e Manutenção:**
-
-* **Risco:** Uso de **latest** como versão de imagem, que é instável.
-* **Sugestão de correção:** Definir uma versão específica da imagem e manter o Dockerfile atualizado.
-* **Risco:** Manutenção manual do Docker Compose pode ser desafiadora.
-* **Sugestão de correção:** Explore ferramentas de gerenciamento de Docker, como `docker-compose-upgrades` ou `docker-compose-up`.
-
-**Otimização:**
-
-* **Risco:** Limite da memória para o Docker Compose, que pode levar a desempenho.
-* **Sugestão de correção:** Defina limites de memória específicas para cada serviço.
-* **Risco:** Otimizar o Docker Compose de acordo com as necessidades da sua aplicação.
-* **Sugestão de correção:** Explore técnicas como **scaling** para gerenciar a carga.
-
-**Observações:**
-
-* O Docker Compose é um modelo de gerenciamento de infraestrutura.
-* A auditoria deve considerar outras melhores práticas de segurança, como uso de criptografia, controle de acesso e monitoramento.
+- Configure a permissão do comando `bash` para um usuário não root, como `root`.
+- Proteja o código Docker com um firewall ou um sistema de monitoramento de segurança.
+- Use um nome de volume diferente para o diretório de node_modules.
+- Implementar um sistema de autenticação e controle de acesso (IAM).
+- Implementar medidas de segurança contra ataque à web, como filtrando o acesso a porta 11434.

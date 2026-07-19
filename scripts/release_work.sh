@@ -1,80 +1,103 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script: release_work.sh
 # Objetivo: Automação inteligente do ciclo de release com governança.
 
 # Configuração de Robustez
-set -euo pipefail
+set -Eeuo pipefail
 
 # Configurações
-export SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-COLOR_GREEN='\033[0;32m'; COLOR_YELLOW='\033[0;33m'; COLOR_RED='\033[0;31m'; COLOR_RESET='\033[0m'
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export PROJECT_ROOT
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+RESET='\033[0m'
 
 # --- Variáveis Globais ---
 # Estas serão definidas dinamicamente pela função de detecção.
 COMMIT_TITLE=""
 COMMIT_BODY=""
+START_TIME=$(date +%s)
 
-# --- Funções de Log e Auditoria ---
-log_message() {
-    echo -e "$(date '+%Y-%m-%d %H:%M:%S') - ${1}${2}${COLOR_RESET}"
+log() {
+    local color="$1"
+    shift
+    printf "%s - %b%s%b\n" "$(date '+%F %T')" "$color" "$*" "$RESET"
+}
+
+trap 'log "$RED" "Erro na linha ${LINENO}. Abortando release."; exit 1' ERR
+
+check_dependencies() {
+    local commands=(git bash curl jq docker)
+    for cmd in "${commands[@]}"; do
+        command -v "$cmd" >/dev/null || {
+            log "$RED" "Dependência ausente: $cmd"
+            exit 1
+        }
+    done
+
+    docker compose version >/dev/null 2>&1 || {
+        log "$RED" "Docker Compose não encontrado ou não funcional."
+        exit 1
+    }
+
+    if command -v "shellcheck" >/dev/null; then
+        log "$GREEN" "Opcional 'shellcheck' encontrado. Recomenda-se a verificação dos scripts."
+    fi
+}
+
+run_step() {
+    local title="$1"
+    shift
+    local start
+    start=$(date +%s)
+    log "$BLUE" "▶ $title"
+    "$@"
+    local end
+    end=$(date +%s)
+    log "$GREEN" "✔ $title ($((end - start))s)"
 }
 
 run_governance_audit() {
-    log_message "${COLOR_YELLOW}" "Iniciando auditoria de governança..."
-    if [ -d "${PROJECT_ROOT}/docs/adr" ] && [ -n "$(find "${PROJECT_ROOT}/docs/adr" -maxdepth 1 -name '*.md' 2>/dev/null)" ]; then
-        log_message "${COLOR_GREEN}" "✅ Auditoria aprovada."
-    else
-        log_message "${COLOR_YELLOW}" "⚠️ AVISO: Nenhuma ADR encontrada. Continuando..."
-    fi
-
-    log_message "${COLOR_YELLOW}" "Executando auditoria de governança com IA..."
-    # Captura a saída do script de auditoria para análise.
-    local audit_output
-    if ! audit_output=$(bash "${SCRIPT_DIR}/ai_governance_audit.sh" 2>&1); then
-        log_message "${COLOR_RED}" "❌ ERRO: A execução da auditoria de IA falhou."
-        echo "$audit_output" # Mostra o erro do script
-        log_message "${COLOR_RED}" "Status da Auditoria: REPROVADO"
-        exit 1
-    fi
-
-    # Quality Gate: Verifica se a saída da auditoria contém palavras-chave de falha.
-    if echo "$audit_output" | grep -q -E 'CRÍTICO|RISCO ALTO|VULNERABILIDADE'; then
-        log_message "${COLOR_RED}" "❌ Quality Gate: REPROVADO! A auditoria de IA encontrou problemas críticos."
-        # Exibe o relatório para que o desenvolvedor veja o problema.
-        echo -e "\n--- Relatório da Auditoria ---\n${audit_output}\n--------------------------\n"
-        log_message "${COLOR_RED}" "O release foi interrompido. Corrija os problemas apontados e tente novamente."
-        exit 1
-    fi
-
-    log_message "${COLOR_GREEN}" "✅ Quality Gate: APROVADO! Nenhuma inconsistência crítica encontrada pela IA."
+    # A responsabilidade de falhar (exit 1) e logar o erro é totalmente
+    # do script 'ai_governance_audit.sh'. Este script apenas o orquestra.
+    # O 'set -e' e o 'trap' garantirão que o pipeline pare se a auditoria falhar.
+    bash "${SCRIPT_DIR}/ai_governance_audit.sh"
 }
 
-# --- Funções de Geração de Documentação ---
+run_app_tests() {
+    # Executa a suíte de testes da aplicação. Se falhar, o 'set -e' interromperá o pipeline.
+    npm run test
+}
+
 update_docs() {
-    log_message "${COLOR_YELLOW}" "Sincronizando roadmap com o estado do projeto..."
-    bash "${SCRIPT_DIR}/project_scanner.sh";
+    bash "${SCRIPT_DIR}/project_scanner.sh"
 }
-update_log_md() {
-    log_message "${COLOR_YELLOW}" "Gerando nova entrada para o Diário de Bordo..."
+
+update_log() {
+    log "$YELLOW" "Gerando nova entrada para o Diário de Bordo..."
     local temp_log; temp_log=$(mktemp)
     local log_title; log_title=$(echo "$COMMIT_TITLE" | sed -e 's/feat(frontend): //g' -e 's/docs(governance): //g' -e 's/chore(project): //g' -e 's/\b\(.\)/\u\1/g')
 
     # Constrói a nova entrada de log de forma segura
     printf "📖 Diário de Bordo - AXES Bank\n" > "$temp_log"
     printf "Este arquivo documenta a evolução técnica, decisões de arquitetura e o histórico de desenvolvimento do projeto AXES Bank.\n\n" >> "$temp_log"
-    printf "📅 %s | Registro: %s 💎\n" "$(date "+%Y-%m-%d")" "${log_title}" >> "$temp_log"
+    printf "📅 %s | Registro: %s 💎\n" "$(date "+%F")" "${log_title}" >> "$temp_log"
     printf "🎯 Status Atual\n%s\n\n" "${COMMIT_BODY}" >> "$temp_log"
     printf "Registro realizado por Automação.\n\n***************************************************************************************************************************\n" >> "$temp_log"
 
     # Adiciona o conteúdo antigo e substitui o arquivo original
-    tail -n +3 "Log.md" >> "$temp_log" 2>/dev/null || true
-    mv "$temp_log" "Log.md"
-    log_message "${COLOR_GREEN}" "✅ Diário de Bordo atualizado."
+    # Garante que o arquivo de log exista antes de tentar ler
+    touch "${PROJECT_ROOT}/Log.md"
+    tail -n +3 "${PROJECT_ROOT}/Log.md" >> "$temp_log" 2> /dev/null || true
+    mv "$temp_log" "${PROJECT_ROOT}/Log.md"
 }
+
 generate_linkedin_post() {
-    log_message "${COLOR_YELLOW}" "Gerando post para o LinkedIn..."
-    cat > "linkedin_post.txt" << 'EOM'
+    cat > "${PROJECT_ROOT}/linkedin_post.txt" << 'EOM'
 ### AXES Bank DevOps Portfolio Update ###
 
 Ciclo de desenvolvimento concluído com foco em robustez e governança.
@@ -86,18 +109,20 @@ Isso transforma nossos scripts em ferramentas de engenharia de plataforma, garan
 
 #DevOps #PlatformEngineering #Automation #GovernanceAsCode #BuildInPublic
 EOM
-    log_message "${COLOR_GREEN}" "✅ Post para LinkedIn gerado com sucesso."
 }
 
-# --- Funções de Lógica de Negócio e Git ---
-detect_changes_and_set_commit_msg() {
-    log_message "${COLOR_YELLOW}" "Detectando tipo de alterações para a mensagem de commit..."
+stage_changes() {
+    git add .
+}
+
+detect_commit_message() {
+    log "$YELLOW" "Detectando tipo de alterações para a mensagem de commit..."
     # Usamos git diff --cached para ver o que está no staging area
-    if ! git diff --cached --quiet --exit-code -- "${PROJECT_ROOT}/docs/adr/"; then
+    if ! git diff --cached --quiet --exit-code -- "${PROJECT_ROOT}/docs/adr/" 2> /dev/null; then
         # Mudanças detectadas nos ADRs
         COMMIT_TITLE="docs(governance): Formaliza ou atualiza decisão arquitetural"
         COMMIT_BODY="Este release inclui a formalização ou atualização de uma ou mais decisões arquiteturais (ADRs), reforçando a governança do projeto."
-    elif ! git diff --cached --quiet --exit-code -- "${PROJECT_ROOT}/public/"; then
+    elif ! git diff --cached --quiet --exit-code -- "${PROJECT_ROOT}/public/" 2> /dev/null; then
         # Mudanças detectadas no Frontend
         COMMIT_TITLE="feat(frontend): Evolui o ecossistema da aplicação"
         COMMIT_BODY="Implementação de novas funcionalidades ou componentes na interface do usuário, conforme o roadmap do frontend."
@@ -106,41 +131,52 @@ detect_changes_and_set_commit_msg() {
         COMMIT_TITLE="chore(project): Sincronização de rotina e atualização de documentos"
         COMMIT_BODY="Manutenção regular do projeto, incluindo atualização de logs e roadmap."
     fi
-    log_message "${COLOR_GREEN}" "✅ Mensagem de commit definida para: '${COMMIT_TITLE}'"
+    log "$GREEN" "Mensagem de commit definida para: '${COMMIT_TITLE}'"
 }
 
-perform_git_operations() {
-    log_message "${COLOR_YELLOW}" "Sincronizando Git..."
-    # Garante que as últimas modificações nos logs também sejam adicionadas
+git_commit() {
+    # Adiciona novamente para incluir os arquivos de log e docs gerados
     git add .
 
-    if ! git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"; then
-        log_message "${COLOR_YELLOW}" "⚠️ Nenhuma alteração nova para comitar."
-        # Se não há nada a comitar, não há nada a fazer.
+    # Verifica se há de fato algo para comitar de forma segura
+    if git diff --cached --quiet; then
+        log "$YELLOW" "Nenhuma alteração para commit."
         return
     fi
-    log_message "${COLOR_GREEN}" "✅ Commit realizado com sucesso."
 
-    log_message "${COLOR_YELLOW}" "Realizando push para o repositório remoto..."
-    git push
-    log_message "${COLOR_GREEN}" "✅ Push concluído com sucesso."
+    git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 }
 
-# --- EXECUÇÃO ---
-run_governance_audit
+git_push() {
+    # Garante que estamos enviando para a branch correta no 'origin'
+    # e protege contra o estado de 'detached HEAD'.
+    local current_branch
+    current_branch=$(git symbolic-ref --short HEAD 2>/dev/null) || {
+        log "$RED" "ERRO: HEAD em modo 'detached'. Abortando push."
+        exit 1
+    }
+    git push origin "$current_branch"
+}
 
-# 1. Adiciona tudo ao staging para permitir a inspeção
-git add .
+main() {
+    cd "$PROJECT_ROOT"
+    check_dependencies
+    run_step "Executar Testes da Aplicação" run_app_tests
+    run_step "Governança por IA" run_governance_audit
+    run_step "Adicionar arquivos ao Stage" stage_changes
+    detect_commit_message
+    run_step "Atualizar Documentação (Roadmap)" update_docs
+    run_step "Atualizar Diário de Bordo (Log.md)" update_log
+    run_step "Gerar Post para LinkedIn" generate_linkedin_post
+    run_step "Realizar Commit" git_commit
+    run_step "Realizar Push" git_push
 
-# 2. Detecta as mudanças e prepara as mensagens
-detect_changes_and_set_commit_msg
+    local END_TIME
+    END_TIME=$(date +%s)
+    local TOTAL_TIME=$((END_TIME - START_TIME))
 
-# 3. Gera a documentação com base nas mensagens
-update_docs
-update_log_md
-generate_linkedin_post
+    log "$GREEN" "Release finalizado com sucesso."
+    log "$GREEN" "Tempo total de execução: ${TOTAL_TIME}s"
+}
 
-# 4. Finaliza o ciclo de versionamento
-perform_git_operations
-
-log_message "${COLOR_GREEN}" "✅ Processo de 'RUpload' finalizado."
+main "$@"

@@ -5,14 +5,16 @@ services:
     container_name: axes_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_USER: ${DB_USER:-axes_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-axes_pass}
       POSTGRES_DB: axes_db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - axes_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     healthcheck:
       # Testa se o PostgreSQL está pronto para aceitar conexões.
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d ${POSTGRES_DB:-axes_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-axes_user} -d ${POSTGRES_DB:-axes_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -29,19 +31,20 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://${DB_USER:-admin}:${DB_PASSWORD:-password}@db:5432/axes_db
+      DATABASE_URL: postgres://${DB_USER:-axes_user}:${DB_PASSWORD:-axes_pass}@db:5432/axes_db
       API_BASE_URL: http://localhost:3000 # URL base para o frontend consumir a API
-      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_USER: ${DB_USER:-axes_user}
       POSTGRES_DB: axes_db
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-axes_pass}
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      # Mount the local source code, but exclude node_modules
+      # Monta o código-fonte local para live-reloading.
       - ../:/app
-      # Use a named volume for node_modules to prevent local-to-container conflicts
-      - node_modules:/app/node_modules
+      # Usa um volume nomeado para isolar o node_modules do contêiner,
+      # evitando que a pasta local sobrescreva as dependências instaladas no build.
+      - axes_app_node_modules:/app/node_modules
     networks:
       - axes_network
     healthcheck:
@@ -50,22 +53,40 @@ services:
       timeout: 5s
       retries: 5
 
+  # Reverse Proxy para segurança e centralização de acesso.
+  proxy:
+    image: nginx:1.25-alpine
+    container_name: axes_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80" # Expõe apenas a porta 80 para o mundo externo.
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - axes_network
+    depends_on:
+      - ai
+
   # Agente de IA para Governança e Observabilidade
   ai:
     image: ollama/ollama:latest
     container_name: axes_ai_agent
     restart: unless-stopped
     entrypoint: ["bash", "/app/entrypoint.sh"]
-    # Garante que o script de entrypoint tenha permissões de root para executar
+    environment:
+      IAM_USER: "${IAM_USER?Error: IAM_USER is not set. Please define it in your environment.}"
+      IAM_TOKEN: "${IAM_TOKEN?Error: IAM_TOKEN is not set. Please define it in your environment.}"
+    # Revertendo para o usuário root, pois a imagem base não suporta a criação de usuários.
     user: "0:0"
     volumes:
-      - ollama_data:/root/.ollama
+      # O volume de dados do Ollama.
+      - axes_ai_ollama_data:/root/.ollama
       # O caminho de origem é relativo ao docker-compose.yml (./infra)
       - ./ai/entrypoint.sh:/app/entrypoint.sh
-    ports:
-      - "11434:11434"
-    networks:
-      - axes_network
+    # Conecta o container a duas redes:
+    # 'axes_network' para comunicação interna com o proxy.
+    # 'default' (implícita) para permitir acesso à internet para baixar modelos.
+    networks: [ "axes_network", "default" ]
     healthcheck:
       # Usa o CLI nativo do ollama para verificar a saúde, evitando a dependência do curl.
       test: ["CMD", "ollama", "ps"]
@@ -78,7 +99,6 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
-  # Define the named volume for node_modules
-  node_modules:
-  ollama_data:
+  axes_db_data:
+  axes_app_node_modules:
+  axes_ai_ollama_data:

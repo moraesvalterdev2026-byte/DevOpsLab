@@ -1,12 +1,27 @@
 #!/bin/bash
 set -euo pipefail
 
+COLOR_RED='\033[0;31m'
+COLOR_RESET='\033[0m'
+
 log_message() {
     echo -e "$(date '+%Y-%m-%d %H:%M:%S') - [AI Agent Bootstrap] $1"
 }
 
+validate_credentials() {
+    log_message "Validating IAM credentials..."
+    if [ -z "${IAM_USER:-}" ] || [ -z "${IAM_TOKEN:-}" ]; then
+        echo -e "${COLOR_RED}ERRO: As variáveis de ambiente IAM_USER e IAM_TOKEN devem ser definidas e não podem estar vazias.${COLOR_RESET}"
+        exit 1
+    fi
+    log_message "Credentials validated successfully."
+}
+
+# --- Execução Principal ---
+validate_credentials
+
 log_message "Iniciando o servidor Ollama..."
-/bin/ollama serve &
+ollama serve &
 OLLAMA_PID=$!
 
 log_message "Aguardando o serviço Ollama iniciar..."

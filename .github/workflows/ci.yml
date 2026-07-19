@@ -11,22 +11,24 @@ on:
 
 jobs:
   # Job to build and test the application
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     # Service containers to run with the job
     services:
       # Label used to access the service container
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16.2
         # Environment variables for the postgres service
         env:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: axes_db_test
+          POSTGRES_USER: axes_user
+          POSTGRES_PASSWORD: axes_pass
+          POSTGRES_DB: axes_db
+        ports:
+          - 5432:5432
         # Health check to wait until postgres is ready
         options: >-
-          --health-cmd pg_isready
+          --health-cmd="pg_isready -U axes_user -d axes_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -35,10 +37,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20.x
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 24
           cache: 'npm'
 
       - name: Install dependencies
@@ -50,9 +52,11 @@ jobs:
       - name: Run tests
         run: npm run test
         env:
-          # Environment variables for the test script to connect to the service container
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: axes_db_test
-          POSTGRES_HOST: localhost # The service is mapped to localhost in the runner
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # Dynamically get the mapped port
+          POSTGRES_USER: axes_user
+          POSTGRES_PASSWORD: axes_pass
+          POSTGRES_DB: axes_db
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432 # Port is fixed due to the 'ports' mapping above
+
+      - name: Security audit
+        run: npm audit --production
