@@ -83,8 +83,6 @@ services:
       # O caminho de origem é relativo ao docker-compose.yml (./infra)
       - ./ai/entrypoint.sh:/app/entrypoint.sh
     # Conecta o container a duas redes:
-    ports:
-      - "11434:11434"
     # 'axes_network' para comunicação interna com o proxy.
     # 'default' (implícita) para permitir acesso à internet para baixar modelos.
     networks: [ "axes_network", "default" ]
