@@ -112,3 +112,41 @@ resource "aws_security_group" "app_sg" {
     Name = "axes-bank-app-sg"
   }
 }
+
+# Data source para encontrar a AMI mais recente do Ubuntu 22.04 LTS.
+# Isso garante que estamos sempre usando uma imagem atualizada e segura.
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical (dona oficial do Ubuntu)
+}
+
+# Cria um par de chaves na AWS para acesso SSH seguro à instância.
+# Utiliza a variável definida em 'variables.tf'.
+resource "aws_key_pair" "deployer" {
+  key_name   = "axes-bank-deployer-key"
+  public_key = var.ssh_public_key
+}
+
+# Cria a instância EC2 onde a aplicação será executada.
+resource "aws_instance" "app_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro" # Ideal para o Free Tier da AWS.
+  subnet_id     = aws_subnet.main.id
+  vpc_security_group_ids = [aws_security_group.app_sg.id]
+  key_name      = aws_key_pair.deployer.key_name
+
+  tags = {
+    Name = "axes-bank-app-server"
+  }
+}

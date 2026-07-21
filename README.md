@@ -12,6 +12,7 @@ O AXES Bank foi desenhado para ser auto-explicativo. Implementamos um fluxo de t
 
 * **CLI Autodocumentada:** Digite `make` no terminal para visualizar todos os comandos operacionais disponíveis.
 * **Gate de Governança:** O script `release_work.sh` atua como um guardião, validando ADRs (Architectural Decision Records) antes de qualquer novo release.
+* **Modelo Operacional:** Nossa filosofia de engenharia e governança está formalizada no Guia de Operação e Governança Técnica.
 * **Transparência (Build in Public):** Histórico detalhado de decisões arquiteturais e evolução técnica registrado no `Log.md`.
 * **Padronização:** Fluxo de versionamento estruturado seguindo as melhores práticas de *Conventional Commits*.
 
