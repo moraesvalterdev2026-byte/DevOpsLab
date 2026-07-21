@@ -1,39 +1,233 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - AXES Bank</title>
-    <link rel="stylesheet" href="style.css">
+    <title>AXES Bank | Dashboard Corporativo</title>
+    <!-- Tailwind CSS CDN com suporte a modo escuro -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        axesgreen: '#10b981',
+                        axesblue: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <main class="dashboard-main">
-        <div class="dashboard-header">
-            <h1>Bem-vindo, <span id="user-email">...</span>!</h1>
-            <button id="btn-logout">Sair</button>
+<body class="bg-darkbg text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-cardbg border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-axesblue text-white p-2 rounded-lg font-bold tracking-wider">
+                    <i class="fa-solid fa-shield-halved"></i> AXES
+                </div>
+                <span class="text-xl font-semibold tracking-tight text-white">Bank <span class="text-xs bg-axesgreen/20 text-axesgreen px-2 py-0.5 rounded-full font-mono">Enterprise v1.0</span></span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex flex-col text-right">
+                    <span id="user-name" class="text-sm font-medium text-slate-200">Valter Lima</span>
+                    <span class="text-xs text-slate-400 font-mono">Ag: 0001 | CC: 8842-9</span>
+                </div>
+                <button onclick="logout()" class="bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white px-3 py-1.5 rounded-lg text-sm transition duration-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow space-y-6">
+
+        <!-- BOAS-VINDAS E STATUS RÁPIDO -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-xl">
+            <div>
+                <h1 class="text-2xl font-bold text-white">Bem-vindo de volta, <span id="welcome-name">Valter</span>.</h1>
+                <p class="text-slate-400 text-sm mt-1">Aqui está o resumo financeiro e operacional da sua conta hoje.</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center space-x-3 bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-800">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-mono text-slate-300">Cluster AWS / Docker: <strong class="text-emerald-400">Saudável (Healthy)</strong></span>
+            </div>
         </div>
 
-        <div id="accounts-list">
-            <h2>Suas Contas</h2>
-            <p>Carregando contas...</p>
+        <!-- GRID DE CARDS FINANCEIROS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Saldo Disponível -->
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Saldo Disponível</p>
+                        <h2 id="account-balance" class="text-3xl font-extrabold text-white mt-2">R$ 24.850,00</h2>
+                    </div>
+                    <div class="bg-axesgreen/10 text-axesgreen p-3 rounded-xl">
+                        <i class="fa-solid fa-wallet text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-axesgreen">
+                    <i class="fa-solid fa-arrow-trend-up mr-1"></i>
+                    <span>+12.4% em relação ao mês anterior</span>
+                </div>
+            </div>
+
+            <!-- Fatura do Cartão -->
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Fatura Atual (AXES Neon)</p>
+                        <h2 class="text-3xl font-extrabold text-white mt-2">R$ 3.420,50</h2>
+                    </div>
+                    <div class="bg-axesblue/10 text-axesblue p-3 rounded-xl">
+                        <i class="fa-solid fa-credit-card text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-slate-400">
+                    <span>Fechamento dia 25 • Vencimento dia 02</span>
+                </div>
+            </div>
+
+            <!-- Investimentos / Yield -->
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Rendimento Automático</p>
+                        <h2 class="text-3xl font-extrabold text-white mt-2">R$ 1.150,80</h2>
+                    </div>
+                    <div class="bg-purple-500/10 text-purple-400 p-3 rounded-xl">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-xs text-purple-400 font-mono">
+                    <span>102% do CDI (Liquidez Diária)</span>
+                </div>
+            </div>
         </div>
 
-        <div id="transfer-form">
-            <h2>Nova Transferência</h2>
-            <form id="transactionForm">
-                <select id="from-account" required></select>
-                <input type="number" id="to-account" placeholder="ID da Conta de Destino" required />
-                <input type="number" id="amount" placeholder="Valor" step="0.01" required />
-                <button type="submit">Transferir</button>
-            </form>
-            <div id="transfer-message"></div>
+        <!-- SEÇÃO INFERIOR: EXTRATO & WIDGET DE INFRAESTRUTURA -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Extrato de Transações (2 colunas) -->
+            <div class="lg:col-span-2 bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check text-axesblue"></i>
+                        <span>Últimas Movimentações</span>
+                    </h3>
+                    <button class="text-xs text-axesblue hover:underline font-medium">Ver Extrato Completo</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-xs text-slate-400 font-mono uppercase">
+                                <th class="py-3 px-2">Descrição</th>
+                                <th class="py-3 px-2">Categoria</th>
+                                <th class="py-3 px-2">Data</th>
+                                <th class="py-3 px-2 text-right">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-list" class="divide-y divide-slate-800/60 text-sm">
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="py-3 px-2 flex items-center space-x-3">
+                                    <div class="bg-emerald-500/10 text-axesgreen p-2 rounded-lg"><i class="fa-solid fa-arrow-down"></i></div>
+                                    <span class="font-medium text-slate-200">Pix Recebido - Tech Solutions</span>
+                                </td>
+                                <td class="py-3 px-2 text-slate-400 text-xs">Salário / PJ</td>
+                                <td class="py-3 px-2 text-slate-400 text-xs font-mono">Hoje, 14:32</td>
+                                <td class="py-3 px-2 text-right font-mono font-semibold text-axesgreen">+ R$ 8.500,00</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="py-3 px-2 flex items-center space-x-3">
+                                    <div class="bg-rose-500/10 text-rose-400 p-2 rounded-lg"><i class="fa-solid fa-arrow-up"></i></div>
+                                    <span class="font-medium text-slate-200">AWS Cloud Services</span>
+                                </td>
+                                <td class="py-3 px-2 text-slate-400 text-xs">Infraestrutura</td>
+                                <td class="py-3 px-2 text-slate-400 text-xs font-mono">Ontem, 09:15</td>
+                                <td class="py-3 px-2 text-right font-mono font-semibold text-rose-400">- R$ 342,10</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/40 transition">
+                                <td class="py-3 px-2 flex items-center space-x-3">
+                                    <div class="bg-rose-500/10 text-rose-400 p-2 rounded-lg"><i class="fa-solid fa-arrow-up"></i></div>
+                                    <span class="font-medium text-slate-200">Supermercado Extra</span>
+                                </td>
+                                <td class="py-3 px-2 text-slate-400 text-xs">Alimentação</td>
+                                <td class="py-3 px-2 text-slate-400 text-xs font-mono">18/07, 19:40</td>
+                                <td class="py-3 px-2 text-right font-mono font-semibold text-rose-400">- R$ 450,20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Painel de Status DevOps / SRE (1 coluna) -->
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-server text-purple-400"></i>
+                        <span>Platform Telemetry</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Monitoramento em tempo real dos serviços containerizados e do Quality Gate.</p>
+
+                    <!-- Status Items -->
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                            <span class="text-slate-300">app (Node.js)</span>
+                            <span class="text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5"></i> UP (Port 3000)</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                            <span class="text-slate-300">db (PostgreSQL)</span>
+                            <span class="text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5"></i> Healthy</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                            <span class="text-slate-300">proxy (Nginx)</span>
+                            <span class="text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5"></i> Active (Port 80)</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                            <span class="text-slate-300">ai (Ollama Gate)</span>
+                            <span class="text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1.5"></i> Standby</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800 text-center">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-widest font-mono">AXES Bank SRE Operations</span>
+                </div>
+            </div>
+
         </div>
 
-        <div id="transaction-history">
-            <h2>Histórico de Transações</h2>
-            <p>Carregando histórico...</p>
-        </div>
     </main>
-    <script type="module" src="dashboard.js"></script>
+
+    <!-- FOOTER -->
+    <footer class="bg-cardbg border-t border-slate-800 py-4 mt-12 text-center text-xs text-slate-500 font-mono">
+        <p>AXES Bank — Plataforma de Engenharia DevOps & Fintech Laboratory &copy; 2026</p>
+    </footer>
+
+    <!-- Scripts de Integração Existentes -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Função de exemplo para logout
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>
