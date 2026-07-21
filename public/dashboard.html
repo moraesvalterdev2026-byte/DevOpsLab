@@ -4,39 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - AXES Bank</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/utils.js" defer></script>
-    <script src="/js/main.js" defer></script>
-    <script src="/js/api.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <aside id="sidebar" aria-label="Barra lateral de navegação" class="sidebar-container"></aside>
     <main class="dashboard-main">
         <div class="dashboard-header">
-            <h1>Bem-vindo, <span id="user-name">Cliente</span>!</h1>
-            <button class="btn-logout" id="btn-logout">Sair</button>
+            <h1>Bem-vindo, <span id="user-email">...</span>!</h1>
+            <button id="btn-logout">Sair</button>
         </div>
 
-        <div class="dashboard-grid">
-            <div class="dashboard-card" id="balance-component">
-                <h2>Saldo em Conta</h2>
-                <p class="balance-loading">Carregando...</p>
-            </div>
+        <div id="accounts-list">
+            <h2>Suas Contas</h2>
+            <p>Carregando contas...</p>
+        </div>
 
-            <div class="dashboard-card" id="statement-component">
-                <h2>Últimas Transações</h2>
-                <p class="statement-loading">Carregando extrato...</p>
-            </div>
+        <div id="transfer-form">
+            <h2>Nova Transferência</h2>
+            <form id="transactionForm">
+                <select id="from-account" required></select>
+                <input type="number" id="to-account" placeholder="ID da Conta de Destino" required />
+                <input type="number" id="amount" placeholder="Valor" step="0.01" required />
+                <button type="submit">Transferir</button>
+            </form>
+            <div id="transfer-message"></div>
+        </div>
+
+        <div id="transaction-history">
+            <h2>Histórico de Transações</h2>
+            <p>Carregando histórico...</p>
         </div>
     </main>
-
-    <script type="module" src="/js/core/index.js"></script>
-    <script type="module" src="/js/utils/index.js"></script>
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/pages/dashboard.js"></script>
+    <script type="module" src="dashboard.js"></script>
 </body>
 </html>

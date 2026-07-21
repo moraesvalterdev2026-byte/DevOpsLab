@@ -8,7 +8,9 @@ describe('API Integration Tests', () => {
 
   // Garante que a conexão com o banco seja encerrada após todos os testes
   afterAll(async () => {
+    // Fecha o pool de conexões e aguarda um breve delay para limpar o event loop do Node
     await pool.end();
+    await new Promise((resolve) => setTimeout(resolve, 500));
   });
 
   // Teste 1: Validação da Conexão com o Banco de Dados

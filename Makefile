@@ -70,6 +70,13 @@ frontend-validate: ## ✅ Valida se as funções críticas do frontend estão at
 	@echo "Executando validação do frontend..."
 	@bash scripts/frontend_validation.sh
 
+# --- Agente de Banco de Dados ---
+migrate-create: ## 🗄️ (Agente) Cria um novo arquivo de migration. Uso: make migrate-create CMD="<nome>"
+	@bash scripts/db_agent.sh create $(CMD)
+
+migrate-apply: ## 🗄️ (Agente) Aplica todas as migrations pendentes.
+	@bash scripts/db_agent.sh apply
+
 # --- Agente Inteligente de Edição ---
 # Uso: make edit FILE=public/app.js CMD="Adicione uma validação de campo vazio"
 edit: ## 🤖 Edita um arquivo usando o agente de IA.
@@ -94,18 +101,3 @@ backup: ## 💾 Executa o script de backup do banco de dados.
 	@bash scripts/backup_database.sh
 
 ci: lint test ## 🔄 Executa o pipeline local completo (lint e testes).
-	@echo "Pipeline local concluído."
-
-# Sprint 2 - Consolidação de Páginas
-frontend-sprint2: ## 🚧 Executa passos mínimos para Sprint 2 (lint + validação frontend)
-	@echo "Iniciando Sprint 2: refatoração da página de login"
-	@$(MAKE) lint
-	@$(MAKE) frontend-validate
-	@echo "Sprint 2 validações concluídas. Commitar e abrir PR."
-
-# Accessibility (Sprint 3)
-accessibility: ## ♿ Executa testes de acessibilidade (axe + puppeteer) e gera relatórios
-	@echo "Executando varredura de acessibilidade..."
-	node scripts/accessibility_test.js
-	@echo "Relatórios gerados em .accessibility-output/"
-

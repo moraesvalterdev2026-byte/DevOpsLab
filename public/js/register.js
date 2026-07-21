@@ -1,6 +1,6 @@
 import { fetchApi } from './api.js';
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const email = document.getElementById('email').value;
@@ -14,18 +14,17 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   }
 
   try {
-    const data = await fetchApi('auth/login', {
+    const data = await fetchApi('auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
 
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
-      messageDiv.textContent = 'Login bem-sucedido! Redirecionando...';
+    if (data.id) {
+      messageDiv.textContent = 'Conta criada com sucesso! Redirecionando para o login...';
       messageDiv.style.color = 'green';
-      window.location.href = '/dashboard.html'; // Redireciona para o painel do usuário
+      setTimeout(() => { window.location.href = '/login.html'; }, 2000);
     } else {
-      throw new Error(data.error || 'Falha no login.');
+      throw new Error(data.error || 'Falha ao criar conta.');
     }
   } catch (error) {
     messageDiv.textContent = error.message;
