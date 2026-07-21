@@ -7,7 +7,6 @@ import pool from './db.js'; // Importa o pool de conexão
 import bcrypt from 'bcrypt'; // Importa o bcrypt para hashing de senha
 import jwt from 'jsonwebtoken'; // Importa a biblioteca para JWT
 import authenticateToken from './middleware/auth.js'; // Importa o middleware de autenticação
-
 // Carrega as variáveis de ambiente do arquivo .env na raiz do projeto.
 dotenv.config();
 const app = express();
